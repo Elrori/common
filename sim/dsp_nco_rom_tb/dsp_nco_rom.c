@@ -16,7 +16,7 @@ int main(int argc,char **argv){
     FILE *fp1;
     FILE *fp2;
     if(argc != 3){
-        printf("Argv ERROR\nUsage: dsp_nco_rom <mem depth(n points)> <mem width>");
+        printf("Argv ERROR\nUsage: dsp_nco_rom <mem depth(n points)> <mem width>\n");
         return 0;
     }
     depth = atoi(argv[1]);
@@ -39,10 +39,11 @@ int main(int argc,char **argv){
             y       = round(y);
             int z   = (int)y;
             if(i != 0 && i <= depth / 4)
-			    fprintf(fp1,"%x\n", z & ((1<<width)-1) );
+                fprintf(fp1,"%x\n", z & ((1<<width)-1) );
             fprintf(fp2,"%x\n", z & ((1<<width)-1) );
         }
 		printf("Write file to: \ndsp_nco_rom.txt\ndsp_nco_rom_full.log\n\n");
         fclose(fp1);
+	fclose(fp2);
     }
 }
