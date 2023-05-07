@@ -54,66 +54,57 @@ generate
     if (METHOD == "SMALL_ROM") begin
         reg  [DATA_WIDTH-1:0] mem_sin [NPOINTdiv4-1:0];
         reg  [DATA_WIDTH-1:0] mem_cos [NPOINTdiv4-1:0];
-        reg  [ADDR_WIDTH  :0] add_0;
+        reg  [ADDR_WIDTH  :0] add;
         wire [DATA_WIDTH-1:0] mem_0;
-        reg  [ADDR_WIDTH  :0] add_1;
         wire [DATA_WIDTH-1:0] mem_1;
         initial begin
         $readmemh(FILE_SIN, mem_sin);
         $readmemh(FILE_COS, mem_cos);
         end
-        assign mem_0 = add_0 == {(ADDR_WIDTH+1){1'd0}} ? {DATA_WIDTH{1'd0}}            : mem_sin[add_0 - 1'd1];
-        assign mem_1 = add_1 == {(ADDR_WIDTH+1){1'd0}} ? {1'd0,{(DATA_WIDTH-1){1'd1}}} : mem_cos[add_1 - 1'd1];
+        assign mem_0 = add == {(ADDR_WIDTH+1){1'd0}} ? {DATA_WIDTH{1'd0}}            : mem_sin[add   - 1'd1];
+        assign mem_1 = add == {(ADDR_WIDTH+1){1'd0}} ? {1'd0,{(DATA_WIDTH-1){1'd1}}} : mem_cos[add - 1'd1];
         always @(*) begin
             sin = {DATA_WIDTH{1'd0}};
             cos = {DATA_WIDTH{1'd0}};
             case(addr[ADDR_WIDTH-1:ADDR_WIDTH-3])
             3'd0:begin
-                add_0    = addr;
+                add      = addr;
                 sin      = mem_0;
-                add_1    = addr;
                 cos      = mem_1;
             end
             3'd1:begin
-                add_0    = NPOINTdiv4 - addr;
+                add      = NPOINTdiv4 - addr;
                 sin      = mem_1;
-                add_1    = NPOINTdiv4 - addr;
                 cos      = mem_0;
             end
             3'd2:begin
-                add_0    = addr - NPOINTdiv4;
+                add      = addr - NPOINTdiv4;
                 sin      = mem_1;
-                add_1    = addr - NPOINTdiv4;
                 cos      = 0 - mem_0;
             end
             3'd3:begin
-                add_0    = NPOINTdiv2 - addr;
+                add      = NPOINTdiv2 - addr;
                 sin      = mem_0;
-                add_1    = NPOINTdiv2 - addr;
                 cos      = 0 - mem_1;
             end
             3'd4:begin
-                add_0    = addr - NPOINTdiv2;
+                add      = addr - NPOINTdiv2;
                 sin      = 0 - mem_0;
-                add_1    = addr - NPOINTdiv2;
                 cos      = 0 - mem_1;
             end
             3'd5:begin
-                add_0    = NPOINTdiv4*3 - addr;
+                add      = NPOINTdiv4*3 - addr;
                 sin      = 0 - mem_1;
-                add_1    = NPOINTdiv4*3 - addr;
                 cos      = 0 - mem_0;
             end
             3'd6:begin
-                add_0    = addr - NPOINTdiv4*3;
+                add      = addr - NPOINTdiv4*3;
                 sin      = 0 - mem_1;
-                add_1    = addr - NPOINTdiv4*3;
                 cos      = mem_0;
             end
             3'd7:begin
-                add_0    = NPOINT - addr;
+                add      = NPOINT - addr;
                 sin      = 0 - mem_0;
-                add_1    = NPOINT - addr;
                 cos      = mem_1;
             end
             endcase
