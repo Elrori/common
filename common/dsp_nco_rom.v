@@ -32,8 +32,6 @@ initial begin
 end
 generate
     if (METHOD == "SMALL_ROM") begin
-        
-    end else if (METHOD == "MEDIUM_ROM") begin
         reg  [DATA_WIDTH-1:0] mem_sin [NPOINTdiv4-1:0];
         reg  [DATA_WIDTH-1:0] mem_cos [NPOINTdiv4-1:0];
         reg  [ADDR_WIDTH  :0] add_0;
@@ -44,49 +42,96 @@ generate
         $readmemh(FILE_SIN, mem_sin);
         $readmemh(FILE_COS, mem_cos);
         end
-        assign mem_0 = add_0 == {(ADDR_WIDTH+1){1'd0}} ? {DATA_WIDTH{1'd0}} : mem_sin[add_0 - 1'd1];
-        always@(*)begin
-            case(addr[ADDR_WIDTH-1:ADDR_WIDTH-2])
-            2'd0:begin
+        assign mem_0 = add_0 == {(ADDR_WIDTH+1){1'd0}} ? {DATA_WIDTH{1'd0}}            : mem_sin[add_0 - 1'd1];
+        assign mem_1 = add_1 == {(ADDR_WIDTH+1){1'd0}} ? {1'd0,{(DATA_WIDTH-1){1'd1}}} : mem_cos[add_1 - 1'd1];
+        always @(*) begin
+            case(addr[ADDR_WIDTH-1:ADDR_WIDTH-3])
+            3'd0:begin
                 add_0    = addr;
                 sin      = mem_0;
-            end
-            2'd1:begin
-                add_0    = NPOINTdiv2 - addr;
-                sin      = mem_0;
-            end
-            2'd2:begin
-                add_0    = addr - NPOINTdiv2;
-                sin      = 0 - mem_0;
-            end
-            2'd3:begin
-                add_0    = NPOINT - addr;
-                sin      = 0 - mem_0;
-            end
-            endcase
-        end
-        assign mem_1 = add_1 == {(ADDR_WIDTH+1){1'd0}} ? {1'd0,{(DATA_WIDTH-1){1'd1}}} : mem_cos[add_1 - 1'd1];
-        always@(*)begin
-            case(addr[ADDR_WIDTH-1:ADDR_WIDTH-2])
-            2'd0:begin
                 add_1    = addr;
                 cos      = mem_1;
             end
-            2'd1:begin
+            3'd1:begin
+                add_0    = NPOINTdiv4 - addr;
+                sin      = mem_1;
+                add_1    = NPOINTdiv4 - addr;
+                cos      = mem_0;
+            end
+            3'd2:begin
+                add_0    = addr - NPOINTdiv4;
+                sin      = mem_1;
+                add_1    = addr - NPOINTdiv4;
+                cos      = 0 - mem_0;
+            end
+            3'd3:begin
+                add_0    = NPOINTdiv2 - addr;
+                sin      = mem_0;
                 add_1    = NPOINTdiv2 - addr;
                 cos      = 0 - mem_1;
             end
-            2'd2:begin
-                add_1    = addr - NPOINTdiv2; 
+            3'd4:begin
+                add_0    = addr - NPOINTdiv2;
+                sin      = 0 - mem_0;
+                add_1    = addr - NPOINTdiv2;
                 cos      = 0 - mem_1;
             end
-            2'd3:begin
+            3'd5:begin
+                add_0    = NPOINTdiv4*3 - addr;
+                sin      = 0 - mem_1;
+                add_1    = NPOINTdiv4*3 - addr;
+                cos      = 0 - mem_0;
+            end
+            3'd6:begin
+                add_0    = addr - NPOINTdiv4*3;
+                sin      = 0 - mem_1;
+                add_1    = addr - NPOINTdiv4*3;
+                cos      = mem_0;
+            end
+            3'd7:begin
+                add_0    = NPOINT - addr;
+                sin      = 0 - mem_0;
                 add_1    = NPOINT - addr;
                 cos      = mem_1;
             end
             endcase
         end
-
+    end else if (METHOD == "MEDIUM_ROM") begin
+        reg  [DATA_WIDTH-1:0] mem_sin [NPOINTdiv4-1:0];
+        reg  [DATA_WIDTH-1:0] mem_cos [NPOINTdiv4-1:0];
+        reg  [ADDR_WIDTH  :0] add;
+        wire [DATA_WIDTH-1:0] mem_0;
+        wire [DATA_WIDTH-1:0] mem_1;
+        initial begin
+        $readmemh(FILE_SIN, mem_sin);
+        $readmemh(FILE_COS, mem_cos);
+        end
+        assign mem_0 = add == {(ADDR_WIDTH+1){1'd0}} ? {DATA_WIDTH{1'd0}}            : mem_sin[add - 1'd1];
+        assign mem_1 = add == {(ADDR_WIDTH+1){1'd0}} ? {1'd0,{(DATA_WIDTH-1){1'd1}}} : mem_cos[add - 1'd1];
+        always@(*)begin
+            case(addr[ADDR_WIDTH-1:ADDR_WIDTH-2])
+            2'd0:begin
+                add      = addr;
+                sin      = mem_0;
+                cos      = mem_1;
+            end
+            2'd1:begin
+                add      = NPOINTdiv2 - addr;
+                sin      = mem_0;
+                cos      = 0 - mem_1;
+            end
+            2'd2:begin
+                add      = addr - NPOINTdiv2;
+                sin      = 0 - mem_0;
+                cos      = 0 - mem_1;
+            end
+            2'd3:begin
+                add      = NPOINT - addr;
+                sin      = 0 - mem_0;
+                cos      = mem_1;
+            end
+            endcase
+        end
     end else if (METHOD == "LARGE_ROM") begin
         reg  [DATA_WIDTH-1:0] mem_sin [NPOINT-1:0];
         reg  [DATA_WIDTH-1:0] mem_cos [NPOINT-1:0];

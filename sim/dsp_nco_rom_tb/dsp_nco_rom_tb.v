@@ -33,9 +33,9 @@ dsp_nco_rom #(
     .ADDR_WIDTH ( ADDR_WIDTH ),
     .DATA_WIDTH ( DATA_WIDTH ),
     .REG_OUT    ( REG_OUT    ),
-    .FILE_SIN   ( "dsp_nco_rom_sin90.txt"   ),
-    .FILE_COS   ( "dsp_nco_rom_cos90.txt"   ),
-    .METHOD     ( "MEDIUM_ROM"      ))
+    .FILE_SIN   ( "dsp_nco_rom_sin45.txt"   ),
+    .FILE_COS   ( "dsp_nco_rom_cos45.txt"   ),
+    .METHOD     ( "SMALL_ROM"      ))
  u_dsp_nco_rom_sin (
     .clk                     ( clk                     ),
     .rst_n                   ( rst_n                   ),
