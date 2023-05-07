@@ -18,9 +18,11 @@ module dsp_nco_rom #(
     input   wire                    rst_n   ,
 
     input   wire [ADDR_WIDTH-1:0]   addr    ,
-    output  reg  [DATA_WIDTH-1:0]   sin     ,
-    output  reg  [DATA_WIDTH-1:0]   cos    
+    output  reg  [DATA_WIDTH-1:0]   sin_o   ,
+    output  reg  [DATA_WIDTH-1:0]   cos_o  
 );
+reg [DATA_WIDTH-1:0]   sin;
+reg [DATA_WIDTH-1:0]   cos;
 localparam NPOINT       = 2**ADDR_WIDTH;
 localparam NPOINTdiv2   = NPOINT/2;
 localparam NPOINTdiv4   = NPOINT/4;
@@ -30,6 +32,24 @@ initial begin
     $display("dsp_nco_rom.v Sine   : %s",FILE_SIN);
     $display("dsp_nco_rom.v Cosine : %s",FILE_COS);
 end
+generate
+    if (REG_OUT != 0) begin
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin
+                sin_o <= {DATA_WIDTH{1'd0}};
+                cos_o <= {DATA_WIDTH{1'd0}};
+            end else begin
+                sin_o <= sin;
+                cos_o <= cos;
+            end
+        end        
+    end else begin
+        always @(*) begin
+            sin_o = sin;
+            cos_o = cos;            
+        end
+    end
+endgenerate
 generate
     if (METHOD == "SMALL_ROM") begin
         reg  [DATA_WIDTH-1:0] mem_sin [NPOINTdiv4-1:0];
@@ -45,6 +65,8 @@ generate
         assign mem_0 = add_0 == {(ADDR_WIDTH+1){1'd0}} ? {DATA_WIDTH{1'd0}}            : mem_sin[add_0 - 1'd1];
         assign mem_1 = add_1 == {(ADDR_WIDTH+1){1'd0}} ? {1'd0,{(DATA_WIDTH-1){1'd1}}} : mem_cos[add_1 - 1'd1];
         always @(*) begin
+            sin = {DATA_WIDTH{1'd0}};
+            cos = {DATA_WIDTH{1'd0}};
             case(addr[ADDR_WIDTH-1:ADDR_WIDTH-3])
             3'd0:begin
                 add_0    = addr;
@@ -109,6 +131,8 @@ generate
         assign mem_0 = add == {(ADDR_WIDTH+1){1'd0}} ? {DATA_WIDTH{1'd0}}            : mem_sin[add - 1'd1];
         assign mem_1 = add == {(ADDR_WIDTH+1){1'd0}} ? {1'd0,{(DATA_WIDTH-1){1'd1}}} : mem_cos[add - 1'd1];
         always@(*)begin
+            sin = {DATA_WIDTH{1'd0}};
+            cos = {DATA_WIDTH{1'd0}};
             case(addr[ADDR_WIDTH-1:ADDR_WIDTH-2])
             2'd0:begin
                 add      = addr;

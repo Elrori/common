@@ -36,13 +36,13 @@ dsp_nco_rom #(
     .FILE_SIN   ( "dsp_nco_rom_sin45.txt"   ),
     .FILE_COS   ( "dsp_nco_rom_cos45.txt"   ),
     .METHOD     ( "SMALL_ROM"      ))
- u_dsp_nco_rom_sin (
+u_dsp_nco_rom (
     .clk                     ( clk                     ),
     .rst_n                   ( rst_n                   ),
     .addr                    ( addr0   [ADDR_WIDTH-1:0] ),
 
-    .sin                     ( dout0   [DATA_WIDTH-1:0] ),
-    .cos                     ( dout1   [DATA_WIDTH-1:0] )
+    .sin_o                   ( dout0   [DATA_WIDTH-1:0] ),
+    .cos_o                   ( dout1   [DATA_WIDTH-1:0] )
 );
 
 integer i;
