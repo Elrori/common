@@ -2,8 +2,8 @@
 
 DEEP  = 16384
 WIDTH = 12
-VERILOG_DIR = -y../../       \
-              -y../../common \
+VERILOG_DIR = -y../../../       \
+              -y../../../common \
 
 all:*.txt
 

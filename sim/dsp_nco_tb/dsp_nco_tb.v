@@ -4,21 +4,33 @@
 module tb_dsp_nco;
 
 // dsp_nco Parameters
-parameter PERIOD      = 25                     ; // 40MHz
-parameter PHI_WIDTH   = 14                     ;
-parameter ADDR_WIDTH  = 14                     ;
-parameter DATA_WIDTH  = 12                     ;
+parameter PERIOD      = 1000000000/`FS         ; 
+parameter PHI_WIDTH   = `PHI_WIDTHS            ;
+parameter ADDR_WIDTH  = `ADDR_WIDTHS           ;
+parameter DATA_WIDTH  = `DATA_WIDTHS           ;
 parameter USE_DITHER  = 1                      ;
 parameter REG_OUT     = 0                      ;
-parameter FILE_SIN    = "dsp_nco_rom_sin360.txt";
-parameter FILE_COS    = "dsp_nco_rom_cos360.txt";
-parameter METHOD      = "LARGE_ROM"           ;
-
+parameter FILE_SIN    = "dsp_nco_rom_sin45.txt";
+parameter FILE_COS    = "dsp_nco_rom_cos45.txt";
+parameter METHOD      = "SMALL_ROM"            ;
+initial begin
+    $display("Verilog Testbench conf: "); 
+    $display("Fs            : %0d ",`FS       ); 
+    $display("PERIOD        : %0d ",PERIOD    ); 
+    $display("PHI_WIDTH     : %0d ",PHI_WIDTH );
+    $display("ADDR_WIDTH    : %0d ",ADDR_WIDTH);
+    $display("DATA_WIDTH    : %0d ",DATA_WIDTH);
+    $display("USE_DITHER    : %0d ",USE_DITHER);
+    $display("REG_OUT       : %0d ",REG_OUT   );
+    $display("FILE_SIN      : %s ",FILE_SIN  );
+    $display("FILE_COS      : %s ",FILE_COS  );
+    $display("METHOD        : %s ",METHOD    );
+end
 // dsp_nco Inputs
 reg   clk                                  = 0 ;
 reg   rst_n                                = 0 ;
-reg   en                                   = 0 ;
-reg   [PHI_WIDTH-1  :0]  phi_inc           = 2048 ;//10MHz   fo = 40MHz*phi_inc/(2**PHI_WIDTH) 
+reg   en                                   = 0 ;// fo * (2**PHI_WIDTH)/40000000
+reg   [PHI_WIDTH-1  :0]  phi_inc           = `PHI_INCS;//5MHz   fo = 40MHz*phi_inc/(2**PHI_WIDTH) 
 
 // dsp_nco Outputs
 wire  signed [DATA_WIDTH-1 :0]  sin_o             ;
@@ -54,10 +66,12 @@ dsp_nco #(
     .sin_o                   ( sin_o    [DATA_WIDTH-1 :0] ),
     .cos_o                   ( cos_o    [DATA_WIDTH-1 :0] )
 );
-always @(clk) begin
+reg [31:0]cnt = 0 ;
+always @(posedge clk) begin
     if(en)begin
         $fwrite(fsin,"%0d\n",sin_o);
         $fwrite(fcos,"%0d\n",cos_o);
+        cnt <= cnt + 1'd1;
     end
 end
 initial
@@ -69,9 +83,10 @@ begin
     #100;
     @(posedge clk);#0;
     en=1; 
-    repeat(20000)begin
-    @(posedge clk);
+    repeat(`RET_NUMS)begin
+    @(posedge clk);#0;
     end
+    en=1; 
     $fclose(fsin);
     $fclose(fcos);
     $finish;

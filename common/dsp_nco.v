@@ -10,9 +10,9 @@ module dsp_nco #(
     parameter DATA_WIDTH = 12,
     parameter USE_DITHER = 1 , // 
     parameter REG_OUT    = 0 ,
-    parameter FILE_SIN   = "dsp_nco_rom_sin90.txt",
-    parameter FILE_COS   = "dsp_nco_rom_cos90.txt",
-    parameter METHOD     = "MEDIUM_ROM" // "LARGE_ROM"   : the ROM stores the full 360 degrees of both the sine and cosine
+    parameter FILE_SIN   = "dsp_nco_rom_sin45.txt",
+    parameter FILE_COS   = "dsp_nco_rom_cos45.txt",
+    parameter METHOD     = "SMALL_ROM"  // "LARGE_ROM"   : the ROM stores the full 360 degrees of both the sine and cosine
                                         // "MEDIUM_ROM"  : the ROM stores 90 degrees of the sine and cosine waveforms
                                         // "SMALL_ROM"   : the ROM only stores 45 degrees of the sine and cosine waveforms
 )(

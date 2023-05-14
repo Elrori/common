@@ -1,10 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.mlab as mlab
-import scipy
+import sys
 np.set_printoptions(threshold=np.inf)
-
-
 class nco:
     def __init__(self,addr_w,data_w,phi_w,dither,fs) -> None:
         self.fs     = fs
@@ -14,9 +11,18 @@ class nco:
         self.deep   = 2**addr_w
         self.data_w = data_w
         self.rom    = self.get_rom(self.deep,data_w)
-        print('ROM DEEP:{} \nROM WIDTH:{}'.format(self.deep,data_w))
+        print("Python nco conf:")
+        print('ROM DEEP      : {}'.format(self.deep))
+        print('ROM ADDR WIDTH: {}'.format(self.addr_w))
+        print('ROM DATA WIDTH: {}'.format(data_w))
+        print('Fs            : {}'.format(self.fs))
+        print('DITHER        : {}'.format(self.dither))
+        print('PHI WIDTH     : {}'.format(self.phi_w))
 
     def get_rom(self,deep,width):
+        # cos = np.loadtxt('dsp_nco_rom_cos_ret.txt')
+        # sin = np.loadtxt('dsp_nco_rom_sin_ret.txt')
+        # return cos+sin*1j
         dat = np.arange(deep)
         amp = 2**(width-1)-1
         dat = np.round(amp * np.e**(dat*1j*2*np.pi/deep))
@@ -29,9 +35,7 @@ class nco:
         ptr = 0
         ret_sin = np.arange(ret_num)
         ret_cos = np.arange(ret_num)
-
         shift  = self.phi_w-self.addr_w
-
         for i in range(ret_num):
             d0 = np.random.randint(self.dither)
             d1 = np.random.randint(self.dither)
@@ -62,30 +66,30 @@ class nco:
         center = int(len(fft_log)/2)
         half = fft_log[:center]
         peaks = sorted(half)[-100:]
-        print(peaks)
-        sfdr = peaks[-1] - peaks[-2]
-        print()
-        print(f"the SFDR of this signal is {sfdr} dBc")
+        print(f"Peaks:{peaks[-1]-peaks[0]} dBc")
         return half
+    
+if len(sys.argv) != 8:
+    print('Argv error')
+    exit(0)
 
-
-mynco = nco(addr_w=14,data_w=12,phi_w=32,dither=10,fs=40e6)
-ret   = mynco.nco_model(mynco.get_fcw(19.99e6),8192)
-
-# print(mynco.rom)
-# dat_sin = np.append(dat_sin,dat_sin)
-# dats = np.arange(num*100)
-# dats = np.round(amp * np.e**(dats*1j*2*np.pi/num))
-# dats_sin = dats.imag.astype(np.int32)
-# dats_cos = dats.real
-# np.savetxt("dat_sin.txt",dat_sin,fmt='%x')
-# np.savetxt("dat_cos.txt",dat_cos,fmt='%x')
+mynco           = nco(addr_w=int(sys.argv[1]),data_w=int(sys.argv[2]),phi_w=int(sys.argv[3]),dither=int(sys.argv[4]),fs=int(sys.argv[5]))
+python_output   = mynco.nco_model(phi_inc=int(sys.argv[6]),ret_num=int(sys.argv[7]))
+python_spectrum = mynco.get_spectrum(python_output ,'blackman')
+# print('fcw:{}'.format(hex(fcw)))
 # pw = plt.psd(ret,Fs=40e6)
-plt.figure()
-# plt.plot(mynco.rom.imag)
-# plt.plot(mynco.rom.real)
-# plt.plot(ret.imag)
-# plt.plot(ret.real)
-plt.plot(mynco.get_spectrum(ret,'rectangular'))
+verilog_cos = np.loadtxt('dsp_nco_cos_ret.txt')
+verilog_sin = np.loadtxt('dsp_nco_sin_ret.txt')
+verilog_output = verilog_cos+verilog_sin*1j
+verilog_spectrum = mynco.get_spectrum(verilog_output,'blackman')
 
+
+plt.figure()
+ppython , = plt.plot(np.arange(8192),python_spectrum ,linewidth=5)
+pverilog, = plt.plot(np.arange(8192),verilog_spectrum)
+plt.legend([ppython,pverilog],['python NCO model','verilog NCO'])
+plt.title("Verilog NCO VS. python NCO")
+plt.xlabel("f")
+plt.ylabel("dB")
+plt.grid()
 plt.show()
