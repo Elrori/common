@@ -85,8 +85,8 @@ verilog_spectrum = mynco.get_spectrum(verilog_output,'blackman')
 
 
 plt.figure()
-ppython , = plt.plot(np.arange(8192),python_spectrum ,linewidth=5)
-pverilog, = plt.plot(np.arange(8192),verilog_spectrum)
+ppython , = plt.plot(python_spectrum ,linewidth=5)
+pverilog, = plt.plot(verilog_spectrum)
 plt.legend([ppython,pverilog],['python NCO model','verilog NCO'])
 plt.title("Verilog NCO VS. python NCO")
 plt.xlabel("f")
