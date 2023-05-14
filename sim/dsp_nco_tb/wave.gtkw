@@ -1,21 +1,22 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Sun May 14 02:06:54 2023
+[*] Sun May 14 10:48:10 2023
 [*]
 [dumpfile] "\\wsl.localhost\Ubuntu-18.04\home\helrori\workspace\common\sim\dsp_nco_tb\wave.vcd"
-[dumpfile_mtime] "Sun May 14 02:06:41 2023"
-[dumpfile_size] 4348414
+[dumpfile_mtime] "Sun May 14 10:47:15 2023"
+[dumpfile_size] 5991288
 [savefile] "\\wsl.localhost\Ubuntu-18.04\home\helrori\workspace\common\sim\dsp_nco_tb\wave.gtkw"
-[timestart] 44300
+[timestart] 39468000
 [size] 1707 996
 [pos] -1 -1
-*-16.000000 728500 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-20.000000 36156000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_dsp_nco.
+[treeopen] tb_dsp_nco.u_dsp_nco.
 [sst_width] 197
 [signals_width] 134
 [sst_expanded] 1
 [sst_vpaned_height] 293
-@25
+@24
 tb_dsp_nco.cnt[31:0]
 @28
 tb_dsp_nco.u_dsp_nco.rst_n
@@ -28,5 +29,7 @@ tb_dsp_nco.u_dsp_nco.addr[13:0]
 @8420
 tb_dsp_nco.u_dsp_nco.sin_o[11:0]
 tb_dsp_nco.u_dsp_nco.cos_o[11:0]
+@25
+tb_dsp_nco.u_dsp_nco.dither[7:0]
 [pattern_trace] 1
 [pattern_trace] 0

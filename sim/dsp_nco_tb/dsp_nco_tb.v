@@ -8,8 +8,8 @@ parameter PERIOD      = 1000000000/`FS         ;
 parameter PHI_WIDTH   = `PHI_WIDTHS            ;
 parameter ADDR_WIDTH  = `ADDR_WIDTHS           ;
 parameter DATA_WIDTH  = `DATA_WIDTHS           ;
-parameter USE_DITHER  = 1                      ;
-parameter REG_OUT     = 0                      ;
+parameter DITHER_MAX  = 2                      ;
+parameter REG_OUT     = 1                      ;
 parameter FILE_SIN    = "dsp_nco_rom_sin45.txt";
 parameter FILE_COS    = "dsp_nco_rom_cos45.txt";
 parameter METHOD      = "SMALL_ROM"            ;
@@ -20,7 +20,7 @@ initial begin
     $display("PHI_WIDTH     : %0d ",PHI_WIDTH );
     $display("ADDR_WIDTH    : %0d ",ADDR_WIDTH);
     $display("DATA_WIDTH    : %0d ",DATA_WIDTH);
-    $display("USE_DITHER    : %0d ",USE_DITHER);
+    $display("DITHER_MAX    : %0d ",DITHER_MAX  );
     $display("REG_OUT       : %0d ",REG_OUT   );
     $display("FILE_SIN      : %s ",FILE_SIN  );
     $display("FILE_COS      : %s ",FILE_COS  );
@@ -52,7 +52,7 @@ dsp_nco #(
     .PHI_WIDTH  ( PHI_WIDTH  ),
     .ADDR_WIDTH ( ADDR_WIDTH ),
     .DATA_WIDTH ( DATA_WIDTH ),
-    .USE_DITHER ( USE_DITHER ),
+    .DITHER_MAX ( DITHER_MAX ),
     .REG_OUT    ( REG_OUT    ),
     .FILE_SIN   ( FILE_SIN   ),
     .FILE_COS   ( FILE_COS   ),
@@ -62,7 +62,7 @@ dsp_nco #(
     .rst_n                   ( rst_n                      ),
     .en                      ( en                         ),
     .phi_inc                 ( phi_inc  [PHI_WIDTH-1  :0] ),
-
+    .dither_en               ( 1'd1                       ),
     .sin_o                   ( sin_o    [DATA_WIDTH-1 :0] ),
     .cos_o                   ( cos_o    [DATA_WIDTH-1 :0] )
 );
