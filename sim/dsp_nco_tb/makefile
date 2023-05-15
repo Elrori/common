@@ -10,8 +10,8 @@ ADDR_WIDTHS = 14
 DATA_DEEPS  = 16384
 DATA_WIDTHS = 12
 RET_NUMS    = 16384
-DITHERS     = 3
-
+DITHERS     = 1
+REG_OUT     = 1
 # 
 # DO NOT MODIFY BELOW THIS LINE
 # 
@@ -25,6 +25,7 @@ VERILOG_DF = -DPHI_WIDTHS=$(PHI_WIDTHS) \
 	 -DRET_NUMS=$(RET_NUMS) \
 	 -DFS=$(FS) \
 	 -DDITHER_MAXS=$(DITHERS) \
+	 -DREG_OUT=$(REG_OUT)
 
 sim:
 	cd dsp_nco_rom_tb && make clr && make DEEP=$(DATA_DEEPS) WIDTH=$(DATA_WIDTHS)

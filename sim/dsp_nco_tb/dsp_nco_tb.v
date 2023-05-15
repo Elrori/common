@@ -1,4 +1,3 @@
-//~ `New testbench
 `timescale  1ns / 1ps
 
 module tb_dsp_nco;
@@ -9,7 +8,7 @@ parameter PHI_WIDTH   = `PHI_WIDTHS            ;
 parameter ADDR_WIDTH  = `ADDR_WIDTHS           ;
 parameter DATA_WIDTH  = `DATA_WIDTHS           ;
 parameter DITHER_MAX  = `DITHER_MAXS           ;
-parameter REG_OUT     = 1                      ;
+parameter REG_OUT     = `REG_OUT               ;
 parameter FILE_SIN    = "dsp_nco_rom_sin45.txt";
 parameter FILE_COS    = "dsp_nco_rom_cos45.txt";
 parameter METHOD      = "SMALL_ROM"            ;
@@ -20,11 +19,11 @@ initial begin
     $display("PHI_WIDTH     : %0d ",PHI_WIDTH );
     $display("ADDR_WIDTH    : %0d ",ADDR_WIDTH);
     $display("DATA_WIDTH    : %0d ",DATA_WIDTH);
-    $display("DITHER_MAX    : %0d ",DITHER_MAX  );
+    $display("DITHER_MAX    : %0d ",DITHER_MAX);
     $display("REG_OUT       : %0d ",REG_OUT   );
-    $display("FILE_SIN      : %s ",FILE_SIN  );
-    $display("FILE_COS      : %s ",FILE_COS  );
-    $display("METHOD        : %s ",METHOD    );
+    $display("FILE_SIN      : %s  ",FILE_SIN  );
+    $display("FILE_COS      : %s  ",FILE_COS  );
+    $display("METHOD        : %s  ",METHOD    );
 end
 // dsp_nco Inputs
 reg   clk                                  = 0 ;
@@ -67,8 +66,12 @@ dsp_nco #(
     .cos_o                   ( cos_o    [DATA_WIDTH-1 :0] )
 );
 reg [31:0]cnt = 0 ;
+reg en_d1;
 always @(posedge clk) begin
-    if(en)begin
+    en_d1 <= en;
+end
+always @(posedge clk) begin
+    if((REG_OUT != 0 )? en_d1 : en)begin
         $fwrite(fsin,"%0d\n",sin_o);
         $fwrite(fcos,"%0d\n",cos_o);
         cnt <= cnt + 1'd1;
@@ -80,13 +83,14 @@ begin
     $dumpvars(0,tb_dsp_nco);
     fsin = $fopen("dsp_nco_sin_ret.txt","w");   
     fcos = $fopen("dsp_nco_cos_ret.txt","w");   
-    #100;
+    repeat(10)begin @(posedge clk);#0;end
     @(posedge clk);#0;
     en=1; 
     repeat(`RET_NUMS)begin
     @(posedge clk);#0;
     end
-    en=1; 
+    en=0; 
+    repeat(10)begin @(posedge clk);#0;end
     $fclose(fsin);
     $fclose(fcos);
     $finish;
