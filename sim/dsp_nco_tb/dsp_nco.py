@@ -47,9 +47,12 @@ class nco:
         for i in range(ret_num):
             d0 = np.random.randint(self.dither)
             d1 = np.random.randint(self.dither)
-            ptr_trunc = np.right_shift(ptr, shift)
-            ret_sin[i] = self.rom.imag[((ptr_trunc + d0) % self.deep)]
-            ret_cos[i] = self.rom.real[((ptr_trunc + d1) % self.deep)]
+            d0 = np.left_shift(d0, shift-1)
+            d1 = np.left_shift(d1, shift-1)
+            ptr_trunc0 = np.right_shift(ptr+d0, shift)
+            ptr_trunc1 = np.right_shift(ptr+d1, shift)
+            ret_sin[i] = self.rom.imag[((ptr_trunc0) % self.deep)]
+            ret_cos[i] = self.rom.real[((ptr_trunc1) % self.deep)]
             ptr += phi_inc
         return ret_cos+ret_sin*1j
 
@@ -132,3 +135,4 @@ plt.xlabel("f")
 plt.ylabel("dB")
 plt.grid()
 plt.show()
+
