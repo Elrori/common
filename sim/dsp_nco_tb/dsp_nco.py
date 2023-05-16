@@ -47,8 +47,8 @@ class nco:
         for i in range(ret_num):
             d0 = np.random.randint(self.dither)
             d1 = np.random.randint(self.dither)
-            d0 = np.left_shift(d0, shift-1)
-            d1 = np.left_shift(d1, shift-1)
+            d0 = np.left_shift(d0, shift-3)
+            d1 = np.left_shift(d1, shift-3)
             ptr_trunc0 = np.right_shift(ptr+d0, shift)
             ptr_trunc1 = np.right_shift(ptr+d1, shift)
             ret_sin[i] = self.rom.imag[((ptr_trunc0) % self.deep)]
@@ -90,7 +90,7 @@ class nco:
         freqs = np.fft.rfftfreq(len(xw), d=1.0/fs)
         mag = np.abs(Y)
         YdB = 20 * np.log10(mag)
-        peakind = signal.find_peaks_cwt(YdB, np.arange(3,9,3))
+        peakind = signal.find_peaks_cwt(YdB, np.arange(3,9))
         pksf=freqs[peakind]
         pksY=YdB[peakind]
         isorted = np.argsort(pksY)
