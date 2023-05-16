@@ -1,3 +1,10 @@
+#
+# Name  : python nco model
+# EE    : hel
+# Origin: 230516
+# Ref   : https://www.ieee.li/pdf/essay/dds.pdf
+#         https://docs.xilinx.com/v/u/en-US/dds
+#
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
@@ -47,6 +54,9 @@ class nco:
         return ret_cos+ret_sin*1j
 
     def get_spectrum(self,data,window='rectangular'):
+        '''
+        https://cushychicken.github.io/improving-sfdr-in-python-direct-digital-synthesizer/
+        '''
         options = [ 'rectangular', 'hamming', 'hann', 'blackman' ]
         if window not in options:
             exit(0)
