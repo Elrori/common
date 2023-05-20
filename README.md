@@ -10,5 +10,4 @@ sudo apt-get install iverilog
 sudo apt-get install gtkwave
 pip3 install matplotlib
 pip3 install numpy
-
 ```
