@@ -1,0 +1,32 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Sat May 20 09:12:30 2023
+[*]
+[dumpfile] "\\wsl.localhost\Ubuntu-18.04\home\helrori\workspace\common\sim\dsp_cic_dec_var_tb\wave.vcd"
+[dumpfile_mtime] "Sat May 20 09:10:02 2023"
+[dumpfile_size] 13705303
+[savefile] "\\wsl.localhost\Ubuntu-18.04\home\helrori\workspace\common\sim\dsp_cic_dec_var_tb\wave.gtkw"
+[timestart] 0
+[size] 1707 996
+[pos] -87 -87
+*-25.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] dsp_cic_dec_var_tb.
+[sst_width] 197
+[signals_width] 142
+[sst_expanded] 1
+[sst_vpaned_height] 292
+@28
+dsp_cic_dec_var_tb.dsp_cic_dec_var.rst_n
+dsp_cic_dec_var_tb.dsp_cic_dec_var.clk
+@24
+dsp_cic_dec_var_tb.dsp_cic_dec_var.cnt0[8:0]
+dsp_cic_dec_var_tb.dsp_cic_dec_var.dec_fac[8:0]
+@8421
+dsp_cic_dec_var_tb.dsp_cic_dec_var.din[15:0]
+@8420
+dsp_cic_dec_var_tb.dsp_cic_dec_var.dout[42:0]
+dsp_cic_dec_var_tb.dsp_cic_dec_var.dout_cut[15:0]
+@28
+dsp_cic_dec_var_tb.dsp_cic_dec_var.dout_vld
+[pattern_trace] 1
+[pattern_trace] 0
