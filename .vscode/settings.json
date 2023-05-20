@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "*.v": "systemverilog",
-        "*.xdc": "tcl",
-        "math.h": "c",
-        "corecrt_math.h": "c"
-    }
-}
