@@ -18,7 +18,7 @@ reg  clk   = 0;
 reg  rst_n = 0;
 wire dout_vld;
 integer fp;
-reg  [8 :0]dec_fac = 100;
+reg  [8 :0]dec_fac = 199;
 reg  [63:0]cnt0=0,cnt1=0;
 reg  signed [BIN-1:0] din;
 wire signed [BOUT-1:0]dout;
@@ -62,6 +62,14 @@ dsp_cic_dec_var #(
 initial begin
     $dumpfile("wave.vcd");
     $dumpvars(0,dsp_cic_dec_var);
+    $display("dsp_cic_dec_var_tb conf:");
+    $display("M                         : %0d",M     );
+    $display("N                         : %0d",N     );
+    $display("BIN  (din width)          : %0d",BIN   );
+    $display("COUT (dout cut width)     : %0d",COUT  );
+    $display("BOUT (origin dout width)  : %0d",BOUT  );
+    $display("PERIOD                    : %0d ns",PERIOD); 
+    $display("fs                        : %0d sps",fs );
     fp=$fopen("dout.txt","w");
     $readmemh("sine.txt",sine);
     wait(cnt0==2000)begin
