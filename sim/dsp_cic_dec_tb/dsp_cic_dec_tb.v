@@ -9,7 +9,7 @@
 module dsp_cic_dec_tb;
 
 parameter R     = 100;          // 
-parameter M     = 2 ;           // 
+parameter M     = 1 ;           // 
 parameter N     = 3 ;           // 
 parameter BIN   = 10;           // 
 parameter COUT  = 16;           // 
@@ -19,7 +19,7 @@ parameter fs    = 10_000_000_000/PERIOD;   // Sampling rate
 
 reg  clk   = 0;
 reg  rst_n = 0;
-wire dvld;
+wire dout_vld;
 integer fp;
 reg [63:0]cnt0=0,cnt1=0;
 reg  signed [BIN-1:0] din;
@@ -39,7 +39,7 @@ always@(posedge clk)begin
     din  <= sine[cnt1];
     cnt1 <= (cnt1==1999)?0:cnt1 + 1;
     //Receive simulation results for input to matlab
-    if (dvld) begin
+    if (dout_vld) begin
         $fwrite(fp,"%d\n",dout);
         cnt0 <= cnt0 + 1;
     end
@@ -58,7 +58,7 @@ dsp_cic_dec #(
     .din     ( din      ),
     .dout    ( dout     ),
     .dout_cut( dout_cut ),
-    .dvld    ( dvld     )    //dout valid
+    .dout_vld( dout_vld )    //dout valid
 );
 
 initial begin

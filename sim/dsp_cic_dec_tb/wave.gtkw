@@ -1,0 +1,30 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Sat May 20 07:47:57 2023
+[*]
+[dumpfile] "\\wsl.localhost\Ubuntu-18.04\home\helrori\workspace\common\sim\dsp_cic_dec_tb\wave.vcd"
+[dumpfile_mtime] "Sat May 20 07:47:38 2023"
+[dumpfile_size] 52035848
+[savefile] "\\wsl.localhost\Ubuntu-18.04\home\helrori\workspace\common\sim\dsp_cic_dec_tb\wave.gtkw"
+[timestart] 14209000
+[size] 1707 996
+[pos] -1 -1
+*-18.000000 15075000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] dsp_cic_dec_tb.
+[sst_width] 197
+[signals_width] 142
+[sst_expanded] 1
+[sst_vpaned_height] 292
+@28
+dsp_cic_dec_tb.dsp_cic_dec.clk
+dsp_cic_dec_tb.dsp_cic_dec.rst_n
+@25
+dsp_cic_dec_tb.dsp_cic_dec.cnt0[6:0]
+@8420
+dsp_cic_dec_tb.dsp_cic_dec.din[9:0]
+dsp_cic_dec_tb.dsp_cic_dec.dout[29:0]
+dsp_cic_dec_tb.dsp_cic_dec.dout_cut[15:0]
+@28
+dsp_cic_dec_tb.dsp_cic_dec.dout_vld
+[pattern_trace] 1
+[pattern_trace] 0
