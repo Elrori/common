@@ -4,11 +4,11 @@
 *  Origin       :230523
 *  EE           :hel
 */
-module #(
+module dsp_mul2#(
     parameter I_W = 12,
     parameter O_W = 16
 ) 
-dsp_mul2(
+(
    input    wire                      clk         ,        
    input    wire                      rst_n       ,
    input    wire  signed   [I_W-1 :0] din         ,
