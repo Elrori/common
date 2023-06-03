@@ -13,17 +13,15 @@ parameter FILE_SIN    = "dsp_nco_rom_sin45.txt";
 parameter FILE_COS    = "dsp_nco_rom_cos45.txt";
 parameter METHOD      = "SMALL_ROM"            ;
 initial begin
-    $display("Verilog Testbench conf: "); 
-    $display("Fs            : %0d ",`FS       ); 
-    $display("PERIOD        : %0d ",PERIOD    ); 
+    $display("Verilog Testbench conf: ");  
     $display("PHI_WIDTH     : %0d ",PHI_WIDTH );
     $display("ADDR_WIDTH    : %0d ",ADDR_WIDTH);
     $display("DATA_WIDTH    : %0d ",DATA_WIDTH);
     $display("DITHER_MAX    : %0d ",DITHER_MAX);
     $display("REG_OUT       : %0d ",REG_OUT   );
-    $display("FILE_SIN      : %s  ",FILE_SIN  );
-    $display("FILE_COS      : %s  ",FILE_COS  );
-    $display("METHOD        : %s  ",METHOD    );
+    $display("FILE_SIN      : \"%s\"  ",FILE_SIN  );
+    $display("FILE_COS      : \"%s\"  ",FILE_COS  );
+    $display("METHOD        : \"%s\"  ",METHOD    );
 end
 // dsp_nco Inputs
 reg   clk                                  = 0 ;

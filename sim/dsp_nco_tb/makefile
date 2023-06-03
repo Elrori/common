@@ -4,7 +4,7 @@
 # RET_NUMS  : capture numbers
 #
 FS          = 40000000
-PHI_INCS    = 1901109465
+PHI_INCS    = 1431655730
 PHI_WIDTHS  = 32
 ADDR_WIDTHS = 13
 DATA_DEEPS  = 8192
