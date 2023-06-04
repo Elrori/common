@@ -31,6 +31,10 @@ sim:
 	cd dsp_nco_rom_tb && make clr && make DEEP=$(DATA_DEEPS) WIDTH=$(DATA_WIDTHS)
 	cp ./dsp_nco_rom_tb/dsp_nco_rom_sin45.txt .
 	cp ./dsp_nco_rom_tb/dsp_nco_rom_cos45.txt .
+	cp ./dsp_nco_rom_tb/dsp_nco_rom_sin90.txt .
+	cp ./dsp_nco_rom_tb/dsp_nco_rom_cos90.txt .
+	cp ./dsp_nco_rom_tb/dsp_nco_rom_sin360.txt .
+	cp ./dsp_nco_rom_tb/dsp_nco_rom_cos360.txt .
 	iverilog $(VERILOG_DIR) $(VERILOG_DF) -o dsp_nco_tb.vvp dsp_nco_tb.v
 	vvp dsp_nco_tb.vvp
 	python3 dsp_nco.py $(ADDR_WIDTHS) $(DATA_WIDTHS) $(PHI_WIDTHS) $(DITHERS) $(FS) $(PHI_INCS) $(RET_NUMS) 

@@ -26,7 +26,8 @@
 
 module simple_ram #(
     parameter width     = 1,
-    parameter widthad   = 1    
+    parameter widthad   = 1,
+    parameter initfile  = "None"    
 )(
     input                       clk,
     
@@ -40,6 +41,9 @@ module simple_ram #(
 
 
 reg [width-1:0] mem [(2**widthad)-1:0];
+initial begin
+    $readmemh(initfile, mem);
+end
 
 always @(posedge clk) begin
     if(wren) mem[wraddress] <= data;

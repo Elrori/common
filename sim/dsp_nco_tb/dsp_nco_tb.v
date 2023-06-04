@@ -9,9 +9,9 @@ parameter ADDR_WIDTH  = `ADDR_WIDTHS           ;
 parameter DATA_WIDTH  = `DATA_WIDTHS           ;
 parameter DITHER_MAX  = `DITHER_MAXS           ;
 parameter REG_OUT     = `REG_OUT               ;
+parameter METHOD      = "SMALL_ROM"           ;
 parameter FILE_SIN    = "dsp_nco_rom_sin45.txt";
 parameter FILE_COS    = "dsp_nco_rom_cos45.txt";
-parameter METHOD      = "SMALL_ROM"            ;
 initial begin
     $display("Verilog Testbench conf: ");  
     $display("PHI_WIDTH     : %0d ",PHI_WIDTH );
@@ -65,11 +65,13 @@ dsp_nco #(
 );
 reg [31:0]cnt = 0 ;
 reg en_d1;
+reg en_d2;
 always @(posedge clk) begin
     en_d1 <= en;
+    en_d2 <= en_d1;
 end
 always @(posedge clk) begin
-    if((REG_OUT != 0 )? en_d1 : en)begin
+    if((REG_OUT != 0 )? en_d2 : en_d1)begin
         $fwrite(fsin,"%0d\n",sin_o);
         $fwrite(fcos,"%0d\n",cos_o);
         cnt <= cnt + 1'd1;

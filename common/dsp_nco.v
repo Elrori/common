@@ -8,8 +8,8 @@ module dsp_nco #(
     parameter PHI_WIDTH  = 32,
     parameter ADDR_WIDTH = 12,
     parameter DATA_WIDTH = 12,
-    parameter DITHER_MAX = 1 , // 0:error, 1:not use, 2:0~1, 3:0~2, 4:0~3 ...8:0~7
-    parameter REG_OUT    = 0 ,
+    parameter DITHER_MAX = 1 , // 0: error, 1: not use, 2:0~1, 3:0~2, 4:0~3 ...8:0~7
+    parameter REG_OUT    = 0 , // 0: 1clock latency, 1: 2clock latency
     parameter FILE_SIN   = "dsp_nco_rom_sin45.txt",
     parameter FILE_COS   = "dsp_nco_rom_cos45.txt",
     parameter METHOD     = "SMALL_ROM"  // "LARGE_ROM"   : the ROM stores the full 360 degrees of both the sine and cosine

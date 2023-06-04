@@ -9,6 +9,9 @@ parameter PERIOD      = 10               ;
 parameter ADDR_WIDTH  = $clog2(`DEPTH)   ;
 parameter DATA_WIDTH  = `WIDTH           ;
 parameter REG_OUT     = 0                ;
+parameter METHOD      = "MEDIUM_ROM"            ;
+parameter FILE_SIN    = "dsp_nco_rom_sin90.txt";
+parameter FILE_COS    = "dsp_nco_rom_cos90.txt";
 
 // dsp_nco_rom Inputs
 reg   clk                                  = 0 ;
@@ -33,9 +36,9 @@ dsp_nco_rom #(
     .ADDR_WIDTH ( ADDR_WIDTH ),
     .DATA_WIDTH ( DATA_WIDTH ),
     .REG_OUT    ( REG_OUT    ),
-    .FILE_SIN   ( "dsp_nco_rom_sin45.txt"   ),
-    .FILE_COS   ( "dsp_nco_rom_cos45.txt"   ),
-    .METHOD     ( "SMALL_ROM"      ))
+    .FILE_SIN   ( FILE_SIN   ),
+    .FILE_COS   ( FILE_COS   ),
+    .METHOD     ( METHOD     ))
 u_dsp_nco_rom (
     .clk                     ( clk                     ),
     .rst_n                   ( rst_n                   ),
@@ -57,6 +60,7 @@ begin
     #0;
     addr0 = add;
     @(posedge clk);
+    wait(clk==0);
     $fwrite(fsin,"%0d\n",dout0);
     $fwrite(fcos,"%0d\n",dout1);
     if(dout0 != mem0[add])begin
@@ -70,6 +74,10 @@ begin
 end
 endtask
 initial begin
+    if(REG_OUT==1)begin
+    $display("This testbench dont support REG_OUT==1");
+    $finish;
+    end
     $dumpfile("wave.vcd");
     $dumpvars(0,dsp_nco_rom_tb);
     $readmemh("dsp_nco_rom_sin360.txt", mem0);    // golden ram
