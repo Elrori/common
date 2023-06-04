@@ -42,6 +42,7 @@ module simple_ram #(
 
 reg [width-1:0] mem [(2**widthad)-1:0];
 initial begin
+    if(initfile != "None" )
     $readmemh(initfile, mem);
 end
 

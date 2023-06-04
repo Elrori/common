@@ -6,12 +6,12 @@
 FS          = 40000000
 PHI_INCS    = 1431655730
 PHI_WIDTHS  = 32
-ADDR_WIDTHS = 13
-DATA_DEEPS  = 8192
+ADDR_WIDTHS = 15
+DATA_DEEPS  = 32768
 DATA_WIDTHS = 12
-RET_NUMS    = 16384
 DITHERS     = 8
 REG_OUT     = 1
+RET_NUMS    = 16384
 # 
 # DO NOT MODIFY BELOW THIS LINE
 # 
@@ -26,9 +26,9 @@ VERILOG_DF = -DPHI_WIDTHS=$(PHI_WIDTHS) \
 	 -DFS=$(FS) \
 	 -DDITHER_MAXS=$(DITHERS) \
 	 -DREG_OUT=$(REG_OUT)
-
-sim:
+rom:
 	cd dsp_nco_rom_tb && make clr && make DEEP=$(DATA_DEEPS) WIDTH=$(DATA_WIDTHS)
+sim:rom
 	cp ./dsp_nco_rom_tb/dsp_nco_rom_sin45.txt .
 	cp ./dsp_nco_rom_tb/dsp_nco_rom_cos45.txt .
 	cp ./dsp_nco_rom_tb/dsp_nco_rom_sin90.txt .
@@ -45,4 +45,4 @@ clean:
 
 clr:clean
 
-.PHONY:all sim draw clean clr
+.PHONY:all sim rom clean clr
