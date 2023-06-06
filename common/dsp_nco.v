@@ -34,7 +34,7 @@ wire   [2           : 0] dither;
 reg    [1           :32] lfsr0;// 32 22 2 1 
 reg    [1           :32] lfsr1;// 32 22 2 1
 reg    [1           :32] lfsr2;// 32 22 2 1
-assign                   dither = {lfsr2,lfsr1,lfsr0};
+assign                   dither = {lfsr2[31],lfsr1[31],lfsr0[31]};
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
         lfsr0[1:32] <= 32'hABCDE110;
