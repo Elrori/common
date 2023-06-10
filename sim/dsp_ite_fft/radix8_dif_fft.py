@@ -165,8 +165,8 @@ def main():
     for i in range(512):
         data[i] = np.sin(21*2*np.pi*i/512)+np.random.random()-0.5
 
-    plt.plot(np.fft.fftshift(abs(np.fft.fft(data)) ),linewidth=5.0)
-    plt.plot(np.fft.fftshift(abs(fft_512(data))    ),)
+    plt.plot(np.fft.fftshift((2/512)*abs(np.fft.fft(data)) ),linewidth=5.0)
+    plt.plot(np.fft.fftshift((2/512)*abs(fft_512(data))    ),)
     plt.show()
 
 main()
