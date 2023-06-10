@@ -1,3 +1,9 @@
+/*
+*  Name         :sys_sw_dfe.v
+*  Description  :
+*  Origin       :230610
+*  EE           :hel
+*/
 module sys_sw_dfe (
     input       wire        clk_adc     ,
     input       wire        rst_n       ,
