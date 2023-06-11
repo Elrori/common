@@ -1,0 +1,86 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Sun Jun 11 02:26:36 2023
+[*]
+[dumpfile] "\\wsl.localhost\Ubuntu-22.04\home\helrori\workspace\common\sim\dsp_ite_fft_tb\wave.vcd"
+[dumpfile_mtime] "Sun Jun 11 02:26:11 2023"
+[dumpfile_size] 802883
+[savefile] "\\wsl.localhost\Ubuntu-22.04\home\helrori\workspace\common\sim\dsp_ite_fft_tb\wave.gtkw"
+[timestart] 10171100
+[size] 1707 996
+[pos] -1 -1
+*-15.363475 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_dsp_ite_fft.
+[sst_width] 197
+[signals_width] 206
+[sst_expanded] 1
+[sst_vpaned_height] 292
+@28
+tb_dsp_ite_fft.u_dsp_ite_fft.clk
+tb_dsp_ite_fft.u_dsp_ite_fft.rst_n
+@24
+tb_dsp_ite_fft.u_dsp_ite_fft.butt_cnt[7:0]
+@28
+tb_dsp_ite_fft.u_dsp_ite_fft.butt_dout_vld
+tb_dsp_ite_fft.u_dsp_ite_fft.butt_neg_rden
+tb_dsp_ite_fft.u_dsp_ite_fft.butt_neg_rden_d1
+@24
+tb_dsp_ite_fft.u_dsp_ite_fft.butt_neg_rden_cnt[7:0]
+@28
+tb_dsp_ite_fft.u_dsp_ite_fft.butt_pos_rden
+@24
+tb_dsp_ite_fft.u_dsp_ite_fft.butt_pos_rden_cnt[8:0]
+@28
+tb_dsp_ite_fft.u_dsp_ite_fft.dat_vld
+tb_dsp_ite_fft.u_dsp_ite_fft.din_vld
+@22
+tb_dsp_ite_fft.u_dsp_ite_fft.din[15:0]
+@28
+tb_dsp_ite_fft.u_dsp_ite_fft.din_busy
+@25
+[color] 3
+tb_dsp_ite_fft.u_dsp_ite_fft.din_cnt[8:0]
+@24
+tb_dsp_ite_fft.u_dsp_ite_fft.din_cnt_tmp[8:0]
+@28
+[color] 2
+tb_dsp_ite_fft.u_dsp_ite_fft.din_vld_pre_raw
+[color] 2
+tb_dsp_ite_fft.u_dsp_ite_fft.din_vld_pre
+[color] 6
+tb_dsp_ite_fft.u_dsp_ite_fft.din_vld_nxt_raw
+[color] 6
+tb_dsp_ite_fft.u_dsp_ite_fft.din_vld_nxt
+tb_dsp_ite_fft.u_dsp_ite_fft.din_vld_nxt_d1
+@22
+tb_dsp_ite_fft.u_dsp_ite_fft.dout[15:0]
+@28
+tb_dsp_ite_fft.u_dsp_ite_fft.dout_vld
+@24
+tb_dsp_ite_fft.u_dsp_ite_fft.mult_cnt[7:0]
+@28
+tb_dsp_ite_fft.u_dsp_ite_fft.mult_dout_vld
+tb_dsp_ite_fft.u_dsp_ite_fft.ram1_dout_vld
+[color] 2
+tb_dsp_ite_fft.u_dsp_ite_fft.rden0
+@24
+[color] 2
+tb_dsp_ite_fft.u_dsp_ite_fft.raddr0[7:0]
+@28
+tb_dsp_ite_fft.u_dsp_ite_fft.wren0
+@24
+tb_dsp_ite_fft.u_dsp_ite_fft.waddr0[7:0]
+@28
+[color] 2
+tb_dsp_ite_fft.u_dsp_ite_fft.rden1
+@24
+[color] 2
+tb_dsp_ite_fft.u_dsp_ite_fft.raddr1[7:0]
+@28
+tb_dsp_ite_fft.u_dsp_ite_fft.wren1
+@24
+tb_dsp_ite_fft.u_dsp_ite_fft.waddr1[7:0]
+@22
+tb_dsp_ite_fft.u_dsp_ite_fft.round_in[3:0]
+[pattern_trace] 1
+[pattern_trace] 0
