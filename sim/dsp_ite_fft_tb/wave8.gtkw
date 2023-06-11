@@ -1,19 +1,19 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Sun Jun 11 04:32:33 2023
+[*] Sun Jun 11 09:56:48 2023
 [*]
 [dumpfile] "\\wsl.localhost\Ubuntu-22.04\home\helrori\workspace\common\sim\dsp_ite_fft_tb\wave.vcd"
-[dumpfile_mtime] "Sun Jun 11 04:31:45 2023"
-[dumpfile_size] 223459
+[dumpfile_mtime] "Sun Jun 11 09:53:30 2023"
+[dumpfile_size] 212300
 [savefile] "\\wsl.localhost\Ubuntu-22.04\home\helrori\workspace\common\sim\dsp_ite_fft_tb\wave8.gtkw"
-[timestart] 0
+[timestart] 210100
 [size] 1707 996
 [pos] -1 -1
-*-18.504501 175000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-15.578497 375000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_dsp_ite_fft.
 [treeopen] tb_dsp_ite_fft.u_dsp_ite_fft.
 [sst_width] 197
-[signals_width] 206
+[signals_width] 222
 [sst_expanded] 1
 [sst_vpaned_height] 292
 @28
@@ -21,15 +21,15 @@ tb_dsp_ite_fft.u_dsp_ite_fft.clk
 tb_dsp_ite_fft.u_dsp_ite_fft.rst_n
 tb_dsp_ite_fft.u_dsp_ite_fft.din_busy
 tb_dsp_ite_fft.u_dsp_ite_fft.din_vld
-@22
+@24
 tb_dsp_ite_fft.u_dsp_ite_fft.din[31:0]
 @28
 tb_dsp_ite_fft.u_dsp_ite_fft.dout_vld
-@22
-tb_dsp_ite_fft.u_dsp_ite_fft.dout[31:0]
 @24
+tb_dsp_ite_fft.u_dsp_ite_fft.dout[31:0]
 tb_dsp_ite_fft.u_dsp_ite_fft.butt_cnt[1:0]
 @28
+[color] 6
 tb_dsp_ite_fft.u_dsp_ite_fft.butt_dout_vld
 tb_dsp_ite_fft.u_dsp_ite_fft.butt_neg_rden
 @24
@@ -56,19 +56,26 @@ tb_dsp_ite_fft.u_dsp_ite_fft.din_vld_pre_raw
 @24
 tb_dsp_ite_fft.u_dsp_ite_fft.mult_cnt[1:0]
 @28
+[color] 6
 tb_dsp_ite_fft.u_dsp_ite_fft.mult_dout_vld
-@29
+[color] 3
 tb_dsp_ite_fft.u_dsp_ite_fft.ram1_dout_vld
-@28
 tb_dsp_ite_fft.u_dsp_ite_fft.store_half
 tb_dsp_ite_fft.u_dsp_ite_fft.finish
+@24
+tb_dsp_ite_fft.u_dsp_ite_fft.round_in[3:0]
+@28
 [color] 2
 tb_dsp_ite_fft.u_dsp_ite_fft.rden0
 @24
 [color] 2
 tb_dsp_ite_fft.u_dsp_ite_fft.raddr0[1:0]
+[color] 2
+tb_dsp_ite_fft.u_dsp_ite_fft.q0[31:0]
 @28
 tb_dsp_ite_fft.u_dsp_ite_fft.wren0
+@25
+tb_dsp_ite_fft.u_dsp_ite_fft.wdata0[31:0]
 @24
 tb_dsp_ite_fft.u_dsp_ite_fft.waddr0[1:0]
 @28
@@ -77,10 +84,48 @@ tb_dsp_ite_fft.u_dsp_ite_fft.rden1
 @24
 [color] 2
 tb_dsp_ite_fft.u_dsp_ite_fft.raddr1[1:0]
+[color] 2
+tb_dsp_ite_fft.u_dsp_ite_fft.q1[31:0]
 @28
 tb_dsp_ite_fft.u_dsp_ite_fft.wren1
+@c00024
+tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+@28
+(0)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(1)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(2)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(3)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(4)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(5)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(6)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(7)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(8)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(9)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(10)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(11)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(12)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(13)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(14)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(15)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(16)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(17)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(18)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(19)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(20)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(21)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(22)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(23)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(24)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(25)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(26)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(27)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(28)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(29)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(30)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+(31)tb_dsp_ite_fft.u_dsp_ite_fft.wdata1[31:0]
+@1401200
+-group_end
 @24
 tb_dsp_ite_fft.u_dsp_ite_fft.waddr1[1:0]
-tb_dsp_ite_fft.u_dsp_ite_fft.round_in[3:0]
 [pattern_trace] 1
 [pattern_trace] 0

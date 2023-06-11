@@ -38,8 +38,8 @@ dsp_ite_fft #(
  u_dsp_ite_fft (
     .clk                     ( clk                    ),
     .rst_n                   ( rst_n                  ),
-    .din                     ( din       [DATA_W*2-1:0] ),
-    .din_vld                 ( (cnt < 16 && cnt >=8)     ||     (cnt < 8*20+8 && cnt >=8*20)      ),
+    .din                     ( {16'd1,16'd0}          ),
+    .din_vld                 ( (cnt < 16 && cnt >=8)           ),//||     (cnt < 8*20+8 && cnt >=8*20)
 
     .din_busy                ( din_busy               ),
     .dout                    ( dout      [DATA_W*2-1:0] ),
@@ -48,11 +48,31 @@ dsp_ite_fft #(
 always @(posedge clk) begin
     cnt <= cnt + 1;
 end
+integer i;
+integer j;
+always @(posedge clk) begin
+    if (dout_vld) begin
+        $display("%0d",dout);
+        i=i+dout;
+    end
+end
 initial
 begin
+    i=0;
+    j=0;
     $dumpfile("wave.vcd");
     $dumpvars(0,tb_dsp_ite_fft);
     #50000;
+    $display("i=%0d",i);
+    for (i = 0;i<8/2 ;i=i+1 ) begin
+        $display("%0d",u_dsp_ite_fft.simple_dpram_0.mem[i]);
+        j=j+u_dsp_ite_fft.simple_dpram_0.mem[i];
+    end
+    for (i = 0;i<8/2 ;i=i+1 ) begin
+        $display("%0d",u_dsp_ite_fft.simple_dpram_1.mem[i]);
+        j=j+u_dsp_ite_fft.simple_dpram_1.mem[i];
+    end
+    $display("j=%0d",j);
     $finish;
 end
 

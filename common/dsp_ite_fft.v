@@ -20,7 +20,7 @@ module dsp_ite_fft #(
     output      wire                dout_vld
 );
 localparam PTN = 8;
-localparam RND = 9;
+localparam RND = 3;
 localparam CTW = $clog2(PTN);
 wire    wren0;
 wire    rden0;	
@@ -88,22 +88,26 @@ assign  rden0 = din_vld_nxt   |  butt_neg_rden;
 assign  wren1 = butt_dout_vld |  mult_dout_vld;
 assign  rden1 = butt_pos_rden;
 
-assign  waddr0[CTW-2:0]       = butt_dout_vld ? butt_cnt[CTW-2:0] : din_cnt[CTW-2:0];
+assign  waddr0[CTW-2:0]       = butt_dout_vld ? butt_cnt[CTW-2:0]               : 
+                                store_half    ? butt_pos_rden_cnt_d1[CTW-2:0]   :
+                                din_cnt[CTW-2:0];
 assign  din_cnt_tmp[CTW-1:0]  = din_cnt[CTW-1:0] + 1'd1;
 assign  raddr0[CTW-2:0]       = din_vld_nxt_raw ? din_cnt_tmp : butt_neg_rden_cnt;
 assign  waddr1[CTW-2:0]       = butt_dout_vld   ? butt_cnt : mult_cnt;
 assign  raddr1[CTW-2:0]       = butt_pos_rden   ? butt_pos_rden_cnt : {(CTW-1){1'd0}};
 
-assign  wdata0[DATA_W-1:0]    = butt_dout_vld ? {butt_dout_real_neg,butt_dout_imag_neg} : din_muxo;
-assign  butt_din_real_pos     = q0   [DATA_W*2-1 :DATA_W];
-assign  butt_din_imag_pos     = q0   [DATA_W-1   :     0];
+assign  wdata0[DATA_W*2-1:0]  = butt_dout_vld ? {butt_dout_real_neg,butt_dout_imag_neg} : din_muxo;
+assign  butt_din_real_pos     = q0       [DATA_W*2-1 :DATA_W];
+assign  butt_din_imag_pos     = q0       [DATA_W-1   :     0];
+assign  mult_din_real         = q0       [DATA_W*2-1 :DATA_W];
+assign  mult_din_imag         = q0       [DATA_W-1   :     0];
 assign  butt_din_real_neg     = din_muxo [DATA_W*2-1 :DATA_W];
 assign  butt_din_imag_neg     = din_muxo [DATA_W-1   :     0];
-assign  wdata1[DATA_W-1:0]    = butt_dout_vld   ? {butt_dout_real_pos,butt_dout_imag_pos} : {mult_dout_real,mult_dout_imag};
-assign  din_muxo              = din_vld ? din : q1[DATA_W-1:0];
+assign  wdata1[DATA_W*2-1:0]  = butt_dout_vld ? {butt_dout_real_pos,butt_dout_imag_pos} : {mult_dout_real,mult_dout_imag};
+assign  din_muxo              = din_vld ? din : q1[DATA_W*2-1:0];
 
 assign  dout_vld              = ram1_dout_vld & (round_in == RND);
-assign  dout                  = q1 & {DATA_W{dout_vld}};
+assign  dout                  = q1 & {(DATA_W*2){dout_vld}};
 assign  finish                = (round_in == RND) & (butt_pos_rden_cnt_d1 == PTN-1);
 assign  store_half            = (round_in == RND) & (butt_pos_rden_cnt_d1 <  PTN/2) & ram1_dout_vld;
 always @(posedge clk or negedge rst_n) begin
@@ -178,59 +182,59 @@ always @(posedge clk or negedge rst_n) begin // ram delay 1
     end
 end
 simple_dpram #(
-    .width     ( DATA_W*2     ),
+    .width     ( DATA_W*2   ),
     .widthad   ( CTW-1      ),
     .initfile  ( "None"     )    
 )simple_dpram_0
 (
-    .clk       ( clk ),
-    .wraddress ( waddr0 ),
-    .wren      ( wren0 ),
-    .data      ( wdata0),
-    .rden      ( rden0 ),
-    .rdaddress ( raddr0 ),
-    .q         ( q0 )
+    .clk       ( clk        ),
+    .wraddress ( waddr0     ),
+    .wren      ( wren0      ),
+    .data      ( wdata0     ),
+    .rden      ( rden0      ),
+    .rdaddress ( raddr0     ),
+    .q         ( q0         )
 );
 simple_dpram #(
-    .width     ( DATA_W*2     ),
+    .width     ( DATA_W*2   ),
     .widthad   ( CTW-1      ),
     .initfile  ( "None"     )    
 )simple_dpram_1
 (
-    .clk       ( clk ),
-    .wraddress ( waddr1 ),
-    .wren      ( wren1 ),
-    .data      ( wdata1),
-    .rden      ( rden1),
-    .rdaddress ( raddr1 ),
-    .q         ( q1 )
+    .clk       ( clk        ),
+    .wraddress ( waddr1     ),
+    .wren      ( wren1      ),
+    .data      ( wdata1     ),
+    .rden      ( rden1      ),
+    .rdaddress ( raddr1     ),
+    .q         ( q1         )
 );
 
 dsp_ite_fft_mult #(DATA_W) dsp_ite_fft_mult
 (
-    .clk             ( clk ),
-    .rst_n           ( rst_n ),
+    .clk             ( clk              ),
+    .rst_n           ( rst_n            ),
     .din_vld         ( butt_neg_rden_d1 ),
-    .din_real        ( mult_din_real ),
-    .din_imag        ( mult_din_imag ),
-    .dout_vld        ( mult_dout_vld ),
-    .dout_real       ( mult_dout_real ),
-    .dout_imag       ( mult_dout_imag ) 
+    .din_real        ( mult_din_real    ),
+    .din_imag        ( mult_din_imag    ),
+    .dout_vld        ( mult_dout_vld    ),
+    .dout_real       ( mult_dout_real   ),
+    .dout_imag       ( mult_dout_imag   ) 
 );
 dsp_ite_fft_butt #(DATA_W)dsp_ite_fft_butt
 (
-    .clk             ( clk ),
-    .rst_n           ( rst_n ),
-    .din_vld         ( din_vld_nxt_d1 ),
-    .din_real_pos    ( butt_din_real_pos ),
-    .din_imag_pos    ( butt_din_imag_pos ),
-    .din_real_neg    ( butt_din_real_neg ),
-    .din_imag_neg    ( butt_din_imag_neg ),
-    .dout_vld        ( butt_dout_vld ),
-    .dout_real_pos   ( butt_dout_real_pos ),
-    .dout_imag_pos   ( butt_dout_imag_pos ),
-    .dout_real_neg   ( butt_dout_real_neg ),
-    .dout_imag_neg   ( butt_dout_imag_neg ) 
+    .clk             ( clk                  ),
+    .rst_n           ( rst_n                ),
+    .din_vld         ( din_vld_nxt_d1       ),
+    .din_real_pos    ( butt_din_real_pos    ),
+    .din_imag_pos    ( butt_din_imag_pos    ),
+    .din_real_neg    ( butt_din_real_neg    ),
+    .din_imag_neg    ( butt_din_imag_neg    ),
+    .dout_vld        ( butt_dout_vld        ),
+    .dout_real_pos   ( butt_dout_real_pos   ),
+    .dout_imag_pos   ( butt_dout_imag_pos   ),
+    .dout_real_neg   ( butt_dout_real_neg   ),
+    .dout_imag_neg   ( butt_dout_imag_neg   ) 
 );
 
 endmodule
@@ -249,17 +253,17 @@ module dsp_ite_fft_mult#(
     output      wire [DATA_W-1:0]   dout_real   ,
     output      wire [DATA_W-1:0]   dout_imag    
 );
-reg  [1:0]din_vld_d;
-assign    dout_vld = din_vld_d[1];
+reg  [2:0]din_vld_d;
+assign    dout_vld = din_vld_d[2];
 always @(posedge clk or negedge rst_n) begin
     if(!rst_n)begin
-        din_vld_d <= 2'd0;
+        din_vld_d <= 3'd0;
     end else begin
         din_vld_d <= {din_vld_d,din_vld};
     end
 end
-assign dout_real = 0;
-assign dout_imag = 0;
+assign dout_real = 1;
+assign dout_imag = 1;
 endmodule
 
 module dsp_ite_fft_butt#(
@@ -289,8 +293,8 @@ always @(posedge clk or negedge rst_n) begin
         din_vld_d <= {din_vld_d,din_vld};
     end
 end
-assign dout_real_pos = 0;
-assign dout_imag_pos = 0;
-assign dout_real_neg = 0;
-assign dout_imag_neg = 0;
+assign dout_real_pos = 1;
+assign dout_imag_pos = 1;
+assign dout_real_neg = 1;
+assign dout_imag_neg = 1;
 endmodule

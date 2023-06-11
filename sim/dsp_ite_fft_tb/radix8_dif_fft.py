@@ -160,13 +160,21 @@ def fft_512(data):
         dout[i] = data[bit_reverse(i,9)]
     return dout
 
-def main():
-    data = np.ones(512,dtype=complex)
-    for i in range(512):
-        data[i] = np.sin(21*2*np.pi*i/512)+np.random.random()-0.5
+def fft_8(data):
+    dout = np.ones(8,dtype=complex)
+    data = radix8_3rd_core(data)
+    for i in range(8):
+        dout[i] = data[bit_reverse(i,3)]
+    return dout
 
-    plt.plot(np.fft.fftshift((2/512)*abs(np.fft.fft(data)) ),linewidth=5.0)
-    plt.plot(np.fft.fftshift((2/512)*abs(fft_512(data))    ),)
+def main():
+    length = 8
+    data = np.ones(length,dtype=complex)
+    # for i in range(length):
+    #     data[i] = np.sin(21*2*np.pi*i/length)+np.random.random()-0.5
+
+    plt.plot(np.fft.fftshift(abs(np.fft.fft(data)) ),linewidth=5.0)
+    plt.plot(np.fft.fftshift(abs(fft_8(data))    ),)
     plt.show()
 
 main()
