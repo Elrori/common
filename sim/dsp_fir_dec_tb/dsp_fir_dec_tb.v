@@ -6,7 +6,7 @@ module dsp_fir_dec_tb;
 // fir_dec Parameters
 parameter PERIOD            = 25;
 parameter R                 = 2 ;
-parameter CLOCK_PER_SAMPLE  = 20;
+parameter CLOCK_PER_SAMPLE  = 30;
 
 // fir_dec Inputs
 reg   clk                                  = 0 ;
@@ -37,26 +37,30 @@ always@(posedge clk or negedge rst_n)begin
         cnt <= 'd0;
         cnt1<= 'd0;
     end else begin
-        if (cnt==19) begin
+        if (cnt==CLOCK_PER_SAMPLE-1) begin
             din <=(sine[cnt1]<<6);// 采样率20MSPS，频率10KHz正弦波 + 200KHz的高频正弦波
             cnt1 <= (cnt1==1999)?0:cnt1 + 1;
         end
-        cnt <=(cnt==19)?'d0:cnt+1;
+        cnt <=(cnt==CLOCK_PER_SAMPLE-1)?'d0:cnt+1;
     end
 end
 
 dsp_fir_dec #(
     .R                ( R                ),
-    .CLOCK_PER_SAMPLE ( CLOCK_PER_SAMPLE ))
+    .CLOCK_PER_SAMPLE ( CLOCK_PER_SAMPLE ),
+    .W_DIN            ( 16               ),
+    .W_DOUT           ( 32               ),
+    .W_COE            ( 16               ),
+    .M_DEEP           ( 64               ),
+    .N_COE            ( 57               ))
  u_fir_dec (
     .clk                     ( clk              ),
     .rst_n                   ( rst_n            ),
     .din                     ( din       [15:0] ),
-    .din_val                 ( cnt==19          ),
+    .din_val                 ( cnt==CLOCK_PER_SAMPLE-1),
     .dout                    ( dout      [31:0] ),
     .dout_val                ( dout_val         )
 );
-
 initial
 begin
     $dumpfile("wave.vcd");

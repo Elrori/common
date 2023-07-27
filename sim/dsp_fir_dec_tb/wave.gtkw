@@ -1,0 +1,47 @@
+[*]
+[*] GTKWave Analyzer v3.3.71 (w)1999-2016 BSI
+[*] Tue Jul 25 09:12:19 2023
+[*]
+[dumpfile] "\\wsl.localhost\Ubuntu-20.04\home\helrori\common\sim\dsp_fir_dec_tb\wave.vcd"
+[dumpfile_mtime] "Tue Jul 25 09:11:19 2023"
+[dumpfile_size] 36304401
+[savefile] "\\wsl.localhost\Ubuntu-20.04\home\helrori\common\sim\dsp_fir_dec_tb\wave.gtkw"
+[timestart] 1619400
+[size] 2560 1351
+[pos] -1 -1
+*-17.239704 2916000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] dsp_fir_dec_tb.
+[sst_width] 239
+[signals_width] 222
+[sst_expanded] 1
+[sst_vpaned_height] 410
+@24
+dsp_fir_dec_tb.u_fir_dec.carry_bit
+dsp_fir_dec_tb.u_fir_dec.clk
+dsp_fir_dec_tb.u_fir_dec.dec_cnt[1:0]
+dsp_fir_dec_tb.u_fir_dec.din[15:0]
+[color] 3
+dsp_fir_dec_tb.u_fir_dec.din_val
+dsp_fir_dec_tb.u_fir_dec.dout[31:0]
+dsp_fir_dec_tb.u_fir_dec.dout_[32:0]
+[color] 3
+dsp_fir_dec_tb.u_fir_dec.dout_val
+[color] 3
+dsp_fir_dec_tb.u_fir_dec.fir_start
+dsp_fir_dec_tb.u_fir_dec.multa[15:0]
+dsp_fir_dec_tb.u_fir_dec.multb[15:0]
+dsp_fir_dec_tb.u_fir_dec.result[31:0]
+@25
+dsp_fir_dec_tb.u_fir_dec.addr_a[5:0]
+@24
+[color] 3
+dsp_fir_dec_tb.u_fir_dec.q_a[15:0]
+@25
+dsp_fir_dec_tb.u_fir_dec.wraddress[5:0]
+dsp_fir_dec_tb.u_fir_dec.rdaddress[5:0]
+@24
+[color] 2
+dsp_fir_dec_tb.u_fir_dec.q[15:0]
+dsp_fir_dec_tb.u_fir_dec.st[2:0]
+[pattern_trace] 1
+[pattern_trace] 0

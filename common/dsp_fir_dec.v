@@ -1,6 +1,6 @@
 /*
 *  Name         :fir_dec.v
-*  Description  :FIR, caution: make sure CLOCK_PER_SAMPLE * R > 33
+*  Description  :FIR, caution: make sure CLOCK_PER_SAMPLE * R > N_COE+2
 *  Origin       :200328
 *               :230502
 *  EE           :hel
@@ -8,8 +8,13 @@
 module dsp_fir_dec
 #(
         parameter R                   = 2,           // Decimation factor
-        parameter COE_FILE            = "coe.txt",     // 滤波器系数，16进制16bit有符号数，总共32个参数，最后一个填0，因为实际只用了31个系数
-        parameter CLOCK_PER_SAMPLE    = 20           // 多少个时钟，din来一次数据
+        parameter COE_FILE            = "coe.txt",   // coefficients, fill 0 that are not used
+        parameter CLOCK_PER_SAMPLE    = 20,          // how many clocks, din comes to data once
+        parameter W_DIN               = 16,         
+        parameter W_DOUT              = 32,         
+        parameter W_COE               = 16,         
+        parameter M_DEEP              = 32,          // memory deep, 2**x
+        parameter N_COE               = 31           // number of coefficients, should < M_DEEP
 )
 (   
     input   wire            clk     ,
@@ -21,18 +26,23 @@ module dsp_fir_dec
     output  reg     [31:0]  dout    ,
     output  reg             dout_val
 );
+generate
+    if (CLOCK_PER_SAMPLE * R <= N_COE + 2) begin
+        wire [1:0]error;
+        wire parameter_error_please_check = error[2];
+    end
+endgenerate
 //-----------------------------------------------------------------------------------------------
-
-localparam W_DIN = 16;
-localparam W_DOUT= 32;
-localparam W_COE = 16;
-localparam N_COE = 31;
 localparam WOUT  = W_DIN + (W_COE+$clog2(N_COE));//全精度
-reg  [1 :0]  dec_cnt;
-reg  [4 :0]  wraddress,rdaddress,addr_a;
-wire [15:0]  q,q_a;
-wire         fir_start = ((dec_cnt==R-1) && din_val);
-reg  [2 :0]  st;
+localparam WIDTHAD = $clog2(M_DEEP);
+reg  [1        :0]  dec_cnt;
+reg  [WIDTHAD-1:0]  wraddress;
+reg  [WIDTHAD-1:0]  rdaddress;
+reg  [WIDTHAD-1:0]  addr_a;
+wire [W_DIN-1  :0]  q;
+wire [W_DIN-1  :0]  q_a;
+wire                fir_start = ((dec_cnt==R-1) && din_val);
+reg  [2        :0]  st;
 reg  signed  [15:0] multa;
 reg  signed  [15:0] multb;
 wire signed  [31:0] result;
@@ -40,12 +50,11 @@ reg  signed  [WOUT-1:0]result_b;
 wire signed  [WOUT-1:0]sum;
 assign result   = multa    * multb ;
 assign sum      = result_b + result;
-wire dout_val_      = (st==3);
+wire dout_val_  = (st==3);
 
-
+// Round
 localparam BOUT = WOUT;
 localparam COUT = W_DOUT;
-// Round
 wire    carry_bit   =  sum[BOUT-1] ? ( sum[BOUT-(COUT-1)-1-1] & ( |sum[BOUT-(COUT-1)-1-1-1:0] ) ) : sum[BOUT-(COUT-1)-1-1] ;
 wire[W_DOUT:0]dout_     = {sum[BOUT-1], sum[BOUT-1:BOUT-(COUT-1)-1]} + carry_bit ;
 // Cut
@@ -123,8 +132,8 @@ always@(posedge clk or negedge rst_n)begin
     end
 end
 simple_ram #(
-    .widthad    (5 ),//deep 32; 32>N_COE
-    .width      (16)
+    .widthad    (WIDTHAD    ),
+    .width      (W_DIN      )
 )simple_ram_0(
     .clk        ( clk       ),
     .wraddress  ( wraddress ),
@@ -134,9 +143,9 @@ simple_ram #(
     .q          ( q         )
 );
 simple_rom #(
-    .widthad    (5 ),//deep 32
-    .width      (16),
-    .datafile   (COE_FILE)//31 coe
+    .widthad    (WIDTHAD    ),
+    .width      (W_DIN      ),
+    .datafile   (COE_FILE   )//31 coe
 )simple_rom_0(
     .clk        ( clk       ),
     .addr_a     ( addr_a    ),
