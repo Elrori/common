@@ -1,4 +1,6 @@
 # common
+
+```
 common verilog module 
   |
   |-- common    can be used directly without modifying the code.
@@ -6,6 +8,7 @@ common verilog module
   |-- example   code modifications may be required to use.
   |
   +-- sim       simulation.
+```
 
 simulation dependency:
 
