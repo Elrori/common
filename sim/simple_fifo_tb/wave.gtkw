@@ -1,0 +1,41 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Wed Oct 11 02:31:13 2023
+[*]
+[dumpfile] "/home/zcy/common/sim/simple_fifo_tb/wave.vcd"
+[dumpfile_mtime] "Wed Oct 11 02:30:25 2023"
+[dumpfile_size] 13138
+[savefile] "/home/zcy/common/sim/simple_fifo_tb/wave.gtkw"
+[timestart] 2051900
+[size] 1575 600
+[pos] -1 -1
+*-16.047827 2126700 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] simple_fifo_tb.
+[sst_width] 214
+[signals_width] 134
+[sst_expanded] 1
+[sst_vpaned_height] 152
+@28
+simple_fifo_tb.simple_fifo_tb.clk
+simple_fifo_tb.simple_fifo_tb.rst
+simple_fifo_tb.simple_fifo_tb.rd_ena
+@24
+simple_fifo_tb.simple_fifo_tb.rd_dat[7:0]
+simple_fifo_tb.simple_fifo_tb.rdaddr[3:0]
+simple_fifo_tb.simple_fifo_tb.rdptr[4:0]
+@29
+simple_fifo_tb.simple_fifo_tb.rd_empty
+@28
+simple_fifo_tb.simple_fifo_tb.wr_ena
+@24
+simple_fifo_tb.simple_fifo_tb.wr_dat[7:0]
+@22
+simple_fifo_tb.simple_fifo_tb.wraddr[3:0]
+@24
+simple_fifo_tb.simple_fifo_tb.wrptr[4:0]
+@28
+simple_fifo_tb.simple_fifo_tb.wr_full
+@24
+simple_fifo_tb.simple_fifo_tb.dat_cnt[4:0]
+[pattern_trace] 1
+[pattern_trace] 0
