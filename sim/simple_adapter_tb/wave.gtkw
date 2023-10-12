@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Thu Oct 12 02:28:30 2023
+[*] Thu Oct 12 02:53:23 2023
 [*]
 [dumpfile] "/home/zcy/common/sim/simple_adapter_tb/wave.vcd"
-[dumpfile_mtime] "Thu Oct 12 02:28:09 2023"
-[dumpfile_size] 3166
+[dumpfile_mtime] "Thu Oct 12 02:51:48 2023"
+[dumpfile_size] 25838590
 [savefile] "/home/zcy/common/sim/simple_adapter_tb/wave.gtkw"
-[timestart] 0
+[timestart] 103817400
 [size] 1000 600
-[pos] -1 -1
-*-17.621616 475000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] 513 3
+*-16.036180 103925000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] simple_adapter_tb.
 [sst_width] 214
 [signals_width] 134
@@ -20,12 +20,17 @@ simple_adapter_tb.clk
 simple_adapter_tb.rstn
 simple_adapter_tb.random1b
 simple_adapter_tb.din_vld_bad
-@29
 [color] 3
 simple_adapter_tb.din_vld
-@23
+@22
 [color] 3
 simple_adapter_tb.din[7:0]
+@29
+[color] 3
+simple_adapter_tb.simple_adapter_inst.din_vld_d1
+@22
+[color] 3
+simple_adapter_tb.simple_adapter_inst.din_d1[7:0]
 @28
 [color] 2
 simple_adapter_tb.dout_vld

@@ -27,6 +27,7 @@ simple_adapter # (
 simple_adapter_inst (
     .clk(clk),
     .rstn(rstn),
+    .last_align(1'd0),
     .din_vld(din_vld),
     .din(din),
     .dout_vld(dout_vld),
@@ -65,7 +66,7 @@ task make_data;
 integer i;
 begin
     for (i = 0;i<1024 ;i=i+1 ) begin
-        buff[i] = {$random}%256;
+        buff[i] = {$random};
         if (i%2) begin
             buff_golden[i/2]={buff[i-1],buff[i]};
         end
@@ -125,8 +126,11 @@ initial begin
     make_data();
     run_data(1024);
 
-    make_data();
-    run_data(1024);
+    for (i = 0;i<100 ;i=i+1 ) begin
+        make_data();
+        run_data(1024);        
+    end
+
 
     $display("PASS");
     nop(8);
