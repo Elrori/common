@@ -34,18 +34,33 @@ genvar j;
     for ( j=0 ; j<SMALL2BIG_DIV ; j=j+1 ) begin :loop
         wire dout_vld;
         wire [DATA_IN_WIDTH*(2**(j+1))-1:0]dout;
-        simple_adapter # (
-            .WIDTH_DIN(DATA_IN_WIDTH*(2**j))
-        )
-        simple_adapter_inst (
-            .clk        (clk),
-            .rstn       (~rst),
-            .last_align (1'd0),
-            .din_vld    (j==0?wr_ena:loop[j-1].dout_vld),
-            .din        (j==0?wr_dat:loop[j-1].dout),
-            .dout_vld   (dout_vld),
-            .dout       (dout)
-        );        
+        if (j==0) begin
+            simple_adapter # (
+                .WIDTH_DIN(DATA_IN_WIDTH)
+            )
+            simple_adapter_inst (
+                .clk        (clk),
+                .rstn       (~rst),
+                .last_align (1'd0),
+                .din_vld    (wr_ena),
+                .din        (wr_dat),
+                .dout_vld   (dout_vld),
+                .dout       (dout)
+            ); 
+        end else begin
+            simple_adapter # (
+                .WIDTH_DIN(DATA_IN_WIDTH*(2**j))
+            )
+            simple_adapter_inst (
+                .clk        (clk),
+                .rstn       (~rst),
+                .last_align (1'd0),
+                .din_vld    (loop[j-1].dout_vld),
+                .din        (loop[j-1].dout),
+                .dout_vld   (dout_vld),
+                .dout       (dout)
+            );            
+        end
     end
 endgenerate
 simple_fifo#(
