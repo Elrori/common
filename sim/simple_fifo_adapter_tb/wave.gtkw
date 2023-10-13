@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Fri Oct 13 10:06:40 2023
+[*] Fri Oct 13 13:48:48 2023
 [*]
-[dumpfile] "/home/zcy/common/sim/simple_fifo_adapter_tb/wave.vcd"
-[dumpfile_mtime] "Fri Oct 13 10:04:04 2023"
-[dumpfile_size] 80823
-[savefile] "/home/zcy/common/sim/simple_fifo_adapter_tb/wave.gtkw"
+[dumpfile] "/home/helrori/common/sim/simple_fifo_adapter_tb/wave.vcd"
+[dumpfile_mtime] "Fri Oct 13 13:47:44 2023"
+[dumpfile_size] 80512
+[savefile] "/home/helrori/common/sim/simple_fifo_adapter_tb/wave.gtkw"
 [timestart] 0
 [size] 1369 600
 [pos] 580 225
-*-21.012518 1165000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-21.012518 1710000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] simple_fifo_adapter_tb.
 [treeopen] simple_fifo_adapter_tb.simple_fifo_adapter_inst.
 [sst_width] 214
@@ -24,7 +24,6 @@ simple_fifo_adapter_tb.simple_fifo_adapter_inst.wr_ena
 @24
 simple_fifo_adapter_tb.simple_fifo_adapter_inst.wr_dat[15:0]
 @28
-simple_fifo_adapter_tb.simple_fifo_adapter_inst.wr_last
 simple_fifo_adapter_tb.simple_fifo_adapter_inst.wr_full
 simple_fifo_adapter_tb.simple_fifo_adapter_inst.almost_full
 [color] 2
@@ -32,7 +31,6 @@ simple_fifo_adapter_tb.simple_fifo_adapter_inst.rd_ena
 @22
 simple_fifo_adapter_tb.simple_fifo_adapter_inst.rd_dat[127:0]
 @28
-simple_fifo_adapter_tb.simple_fifo_adapter_inst.rd_last
 simple_fifo_adapter_tb.simple_fifo_adapter_inst.rd_empty
 @25
 simple_fifo_adapter_tb.simple_fifo_adapter_inst.rd_dat_cnt[4:0]

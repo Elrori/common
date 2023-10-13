@@ -23,19 +23,16 @@ simple_fifo_adapter # (
     .DATA_IN_WIDTH(DATA_IN_WIDTH),
     .DATA_OUT_WIDTH(DATA_OUT_WIDTH),
     .ADDR_WIDTH(ADDR_WIDTH),
-    .FULL_SLACK(1),
-    .USE_LAST(USE_LAST)
+    .FULL_SLACK(1)
   )
   simple_fifo_adapter_inst (
     .rst(rst),
     .clk(clk),
     .wr_ena(wr_ena),
     .wr_dat(wr_dat),
-    .wr_last(wr_last),
     .wr_full(wr_full),
     .rd_ena(rd_ena),
     .rd_dat(rd_dat),
-    .rd_last(rd_last),
     .rd_empty(rd_empty),
     .rd_dat_cnt(dat_cnt)
   );
@@ -49,7 +46,7 @@ task push;
     input [DATA_IN_WIDTH-1:0]dat;
     begin
         wr_ena = 1;
-	wr_dat = dat;
+        wr_dat = dat;
         @(posedge clk) #0;
         wr_ena = 0;
     end
