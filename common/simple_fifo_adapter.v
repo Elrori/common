@@ -16,10 +16,12 @@ module simple_fifo_adapter
 
     input   wire                    wr_ena  ,    
     input   wire[DATA_IN_WIDTH-1:0] wr_dat  , 
+    input   wire                    wr_last ,
     output  wire                    wr_full ,
 
     input   wire                    rd_ena  ,    
     output  wire[DATA_OUT_WIDTH-1:0]rd_dat  , 
+    output  wire                    rd_last ,
     output  wire                    rd_empty,
 
     output  wire[ADDR_WIDTH:0]      rd_dat_cnt  
@@ -32,34 +34,36 @@ assign  wr_full = (FULL_SLACK==0)?wr_full_int:almost_full;
 generate 
 genvar j;
     for ( j=0 ; j<SMALL2BIG_DIV ; j=j+1 ) begin :loop
-        wire dout_vld;
+        wire dout_vld,dout_last;
         wire [DATA_IN_WIDTH*(2**(j+1))-1:0]dout;
         if (j==0) begin
             simple_adapter # (
                 .WIDTH_DIN(DATA_IN_WIDTH)
             )
-            simple_adapter_inst (
+	    simple_adapter_inst (
                 .clk        (clk),
                 .rstn       (~rst),
-                .last_align (1'd0),
                 .din_vld    (wr_ena),
+                .din_last   (wr_last),
                 .din        (wr_dat),
                 .dout_vld   (dout_vld),
+		.dout_last  (dout_last),
                 .dout       (dout)
-            ); 
+            );
         end else begin
             simple_adapter # (
                 .WIDTH_DIN(DATA_IN_WIDTH*(2**j))
-            )
-            simple_adapter_inst (
+            ) 
+ 	    simple_adapter_inst (
                 .clk        (clk),
                 .rstn       (~rst),
-                .last_align (1'd0),
                 .din_vld    (loop[j-1].dout_vld),
+                .din_last   (loop[j-1].dout_last),
                 .din        (loop[j-1].dout),
                 .dout_vld   (dout_vld),
+		.dout_last  (dout_last),
                 .dout       (dout)
-            );            
+            );
         end
     end
 endgenerate

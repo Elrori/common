@@ -1,0 +1,47 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Fri Oct 13 09:20:50 2023
+[*]
+[dumpfile] "/home/zcy/common/sim/simple_adapter_tb/wave.vcd"
+[dumpfile_mtime] "Fri Oct 13 09:17:57 2023"
+[dumpfile_size] 20110
+[savefile] "/home/zcy/common/sim/simple_adapter_tb/serialtb.gtkw"
+[timestart] 0
+[size] 1449 600
+[pos] 163 19
+*-19.253469 2395000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] simple_adapter_serial_tb.
+[treeopen] simple_adapter_serial_tb.loop[0].
+[treeopen] simple_adapter_serial_tb.loop[0].genblk2.
+[treeopen] simple_adapter_serial_tb.loop[1].
+[treeopen] simple_adapter_serial_tb.loop[1].genblk3.
+[treeopen] simple_adapter_serial_tb.loop[2].
+[treeopen] simple_adapter_serial_tb.loop[2].genblk3.
+[sst_width] 214
+[signals_width] 118
+[sst_expanded] 1
+[sst_vpaned_height] 152
+@28
+simple_adapter_serial_tb.loop[0].genblk2.simple_adapter_inst.clk
+@22
+simple_adapter_serial_tb.loop[0].genblk2.simple_adapter_inst.din[15:0]
+@28
+simple_adapter_serial_tb.loop[0].genblk2.simple_adapter_inst.din_last
+simple_adapter_serial_tb.loop[0].genblk2.simple_adapter_inst.din_vld
+@22
+simple_adapter_serial_tb.loop[0].genblk2.simple_adapter_inst.dout[31:0]
+@28
+simple_adapter_serial_tb.loop[0].genblk2.simple_adapter_inst.dout_last
+simple_adapter_serial_tb.loop[0].genblk2.simple_adapter_inst.dout_vld
+@22
+simple_adapter_serial_tb.loop[1].genblk3.simple_adapter_inst.dout[63:0]
+@28
+simple_adapter_serial_tb.loop[1].genblk3.simple_adapter_inst.dout_last
+simple_adapter_serial_tb.loop[1].genblk3.simple_adapter_inst.dout_vld
+@22
+simple_adapter_serial_tb.loop[2].genblk3.simple_adapter_inst.dout[127:0]
+@28
+simple_adapter_serial_tb.loop[2].genblk3.simple_adapter_inst.dout_last
+simple_adapter_serial_tb.loop[2].genblk3.simple_adapter_inst.dout_vld
+[pattern_trace] 1
+[pattern_trace] 0

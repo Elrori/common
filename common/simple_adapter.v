@@ -9,14 +9,16 @@ module simple_adapter#(
 (
      input  wire                 clk,
      input  wire                 rstn,
-     input  wire                 last_align,
 
      input  wire                 din_vld,
+     input  wire                 din_last,
      input  wire [WIDTH_DIN-1:0] din,
      
      output reg                  dout_vld,
+     output reg                  dout_last,
      output reg  [2*WIDTH_DIN-1:0] dout
 );
+reg                 din_last_d1;
 reg                 din_vld_d1;
 reg [WIDTH_DIN-1:0] din_d1;
 reg [WIDTH_DIN-1:0] din_d1_half;
@@ -30,11 +32,13 @@ always@(posedge clk or negedge rstn)begin
         din_d1_half<= {(WIDTH_DIN-1){1'd0}};
         dout       <= {(2*WIDTH_DIN-1){1'd0}};
         dout_vld   <= 1'd0;
+        din_last_d1 <= 1'd0;
+	dout_last  <= 1'd0;
     end else begin
+	din_last_d1<= din_last;
         din_vld_d1 <= din_vld;
         din_d1     <= din;
-        last_align_d1 <= last_align & din_vld;
-        if(last_align_d1)begin
+        if(din_vld_d1 && din_last_d1)begin
             tick    <= 1'd0;
         end else if(din_vld_d1)begin
             tick    <= ~tick;
@@ -44,6 +48,7 @@ always@(posedge clk or negedge rstn)begin
         end
         if(tick==1'd1 && din_vld_d1==1'd1)begin
             dout        <= {din_d1_half,din_d1};
+	    dout_last   <= din_last_d1;
             dout_vld    <= 1'd1;
         end else begin
             dout_vld    <= 1'd0;

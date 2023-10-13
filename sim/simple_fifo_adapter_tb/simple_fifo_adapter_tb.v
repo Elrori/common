@@ -28,6 +28,7 @@ simple_fifo_adapter # (
     .clk(clk),
     .wr_ena(wr_ena),
     .wr_dat(wr_dat),
+    .wr_last(1'd0),
     .wr_full(wr_full),
     .rd_ena(rd_ena),
     .rd_dat(rd_dat),

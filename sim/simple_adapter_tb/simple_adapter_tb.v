@@ -21,14 +21,15 @@ reg [2*WIDTH_DIN-1:0]buff_golden[0:511];
 reg chk_en=0;
 reg [31:0]chk_len=0;
 reg [31:0]chk_len_=0;
+reg din_last=0;
 simple_adapter # (
     .WIDTH_DIN(WIDTH_DIN)
 )
 simple_adapter_inst (
     .clk(clk),
     .rstn(rstn),
-    .last_align(1'd0),
     .din_vld(din_vld),
+    .din_last(din_last),
     .din(din),
     .dout_vld(dout_vld),
     .dout(dout)
@@ -97,10 +98,14 @@ begin
     for (i = 0;i<len ;i=i+1 ) begin
         din_vld_bad=1;
         din=buff[i];
+	if(i==len-1)begin
+            din_last = 1;
+	end
         @(posedge clk) #0;
         while (random1b == 0) begin
             @(posedge clk) #0;
         end
+        din_last = 0;
     end
     din_vld_bad<=0;
     @(posedge clk) #0;
@@ -118,8 +123,8 @@ initial begin
     nop(2);
 
     make_data();
-    run_data(1024);
-
+    run_data(8);
+nop(20);
     make_data();
     run_data(1024);
 
