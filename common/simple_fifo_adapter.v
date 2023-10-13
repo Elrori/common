@@ -8,7 +8,8 @@ module simple_fifo_adapter
     parameter integer DATA_IN_WIDTH     = 16  ,
     parameter integer DATA_OUT_WIDTH    = 128 ,
     parameter integer ADDR_WIDTH        = 8   ,// DEEP = 2**ADDR_WIDTH 
-    parameter integer FULL_SLACK        = 1 
+    parameter integer FULL_SLACK        = 1   ,
+    parameter integer USE_LAST          = 0   
 )
 (
     input   wire                    rst     ,    
@@ -67,19 +68,39 @@ genvar j;
         end
     end
 endgenerate
-simple_fifo#(
-    .DATA_WIDTH(DATA_OUT_WIDTH),
-    .ADDR_WIDTH(ADDR_WIDTH)
-) simple_fifo_tb(
-    .rst     (rst),    
-    .clk     (clk), 
-    .wr_ena  (loop[SMALL2BIG_DIV-1].dout_vld  ),    
-    .wr_dat  (loop[SMALL2BIG_DIV-1].dout  ), 
-    .wr_full (wr_full_int ),
-    .rd_ena  (rd_ena  ),    
-    .rd_dat  (rd_dat  ), 
-    .rd_empty(rd_empty),
-    .dat_cnt (rd_dat_cnt ) 
-);
-
+generate
+    if(USE_LAST)begin
+	wire tmp_last;
+        assign rd_last = rd_empty ?1'd0:tmp_last;
+        simple_fifo#(
+            .DATA_WIDTH(DATA_OUT_WIDTH+1),
+            .ADDR_WIDTH(ADDR_WIDTH)
+        ) simple_fifo_tb(
+            .rst     (rst),    
+            .clk     (clk), 
+            .wr_ena  (loop[SMALL2BIG_DIV-1].dout_vld  ),    
+            .wr_dat  ({loop[SMALL2BIG_DIV-1].dout_last,loop[SMALL2BIG_DIV-1].dout}  ), 
+            .wr_full (wr_full_int ),
+            .rd_ena  (rd_ena  ),    
+            .rd_dat  ({tmp_last,rd_dat}  ), 
+            .rd_empty(rd_empty),
+            .dat_cnt (rd_dat_cnt ) 
+        );
+    end else begin
+       simple_fifo#(
+           .DATA_WIDTH(DATA_OUT_WIDTH),
+           .ADDR_WIDTH(ADDR_WIDTH)
+       ) simple_fifo_tb(
+           .rst     (rst),    
+           .clk     (clk), 
+           .wr_ena  (loop[SMALL2BIG_DIV-1].dout_vld  ),    
+           .wr_dat  (loop[SMALL2BIG_DIV-1].dout  ), 
+           .wr_full (wr_full_int ),
+           .rd_ena  (rd_ena  ),    
+           .rd_dat  (rd_dat  ), 
+           .rd_empty(rd_empty),
+           .dat_cnt (rd_dat_cnt ) 
+       );
+    end
+endgenerate
 endmodule
