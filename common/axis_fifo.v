@@ -11,8 +11,21 @@ module axis_fifo
     parameter integer FULL_SLACK        = 1   
 )
 (
+
     input   wire                    rst     ,    
     input   wire                    clk     , 
+
+    input   wire[DATA_IN_WIDTH-1:0]     s_axis_tdata    ,
+    input   wire                        s_axis_tlast    ,
+    input   wire[DATA_IN_WIDTH/8-1:0]   s_axis_tkeep    ,
+    input   wire                        s_axis_tvalid   ,
+    output  wire                        s_axis_tready   ,
+
+    output  wire[DATA_OUT_WIDTH-1:0]    m_axis_tdata    ,
+    output  wire                        m_axis_tlast    ,
+    output  wire[DATA_OUT_WIDTH/8-1:0]  m_axis_tkeep    ,
+    output  wire                        m_axis_tvalid   ,
+    input   wire                        m_axis_tready   ,
 
     input   wire                    wr_ena  ,    
     input   wire[DATA_IN_WIDTH-1:0] wr_dat  , 
