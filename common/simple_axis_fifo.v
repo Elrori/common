@@ -24,7 +24,9 @@ module simple_axis_fifo
     output  wire[DATA_OUT_WIDTH-1:0]    m_axis_tdata    ,
     output  wire                        m_axis_tlast    ,
     output  wire                        m_axis_tvalid   ,
-    input   wire                        m_axis_tready   
+    input   wire                        m_axis_tready   ,
+
+    output  wire [ADDR_WIDTH:0]         rd_dat_cnt;
 
 );
 wire    almost_full;
@@ -34,7 +36,6 @@ wire    dout_vld;
 wire    dout_last;
 wire [DATA_OUT_WIDTH-1:0]dout;
 wire    rd_empty;
-wire [ADDR_WIDTH:0]rd_dat_cnt;
 wire [ADDR_WIDTH:0]almost_full_th;
 wire    last;
 wire [DATA_OUT_WIDTH/8-1:0]keep;
