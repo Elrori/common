@@ -57,7 +57,15 @@ genvar j;
         end
     end
 endgenerate
-assign dout_vld  = loop[SMALL2BIG_DIV-1].dout_vld_ ;
-assign dout_last = loop[SMALL2BIG_DIV-1].dout_last_;
-assign dout      = loop[SMALL2BIG_DIV-1].dout_;
+generate
+    if(SMALL2BIG_DIV!=0)begin
+        assign dout_vld  = loop[SMALL2BIG_DIV-1].dout_vld_ ;
+        assign dout_last = loop[SMALL2BIG_DIV-1].dout_last_;
+        assign dout      = loop[SMALL2BIG_DIV-1].dout_;
+    end else begin
+        assign dout_vld  = din_vld ;
+        assign dout_last = din_last;
+        assign dout      = din;
+    end
+endgenerate
 endmodule

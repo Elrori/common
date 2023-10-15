@@ -1,0 +1,54 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Sun Oct 15 05:15:47 2023
+[*]
+[dumpfile] "/home/helrori/common/sim/axis_fifo_tb/wave.vcd"
+[dumpfile_mtime] "Sun Oct 15 05:13:36 2023"
+[dumpfile_size] 331147
+[savefile] "/home/helrori/common/sim/axis_fifo_tb/wave.gtkw"
+[timestart] 375000
+[size] 1847 599
+[pos] 169 342
+*-18.389769 1335000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] simple_axis_fifo_tb.
+[treeopen] simple_axis_fifo_tb.u_simple_axis_fifo.
+[sst_width] 214
+[signals_width] 244
+[sst_expanded] 1
+[sst_vpaned_height] 152
+@28
+[color] 2
+simple_axis_fifo_tb.u_simple_axis_fifo.s_axis_tlast
+[color] 3
+simple_axis_fifo_tb.u_simple_axis_fifo.s_axis_tvalid
+[color] 3
+simple_axis_fifo_tb.u_simple_axis_fifo.s_axis_tready
+@24
+simple_axis_fifo_tb.u_simple_axis_fifo.s_axis_tdata[15:0]
+@28
+[color] 2
+simple_axis_fifo_tb.u_simple_axis_fifo.m_axis_tlast
+[color] 3
+simple_axis_fifo_tb.u_simple_axis_fifo.m_axis_tvalid
+[color] 3
+simple_axis_fifo_tb.u_simple_axis_fifo.m_axis_tready
+@22
+simple_axis_fifo_tb.u_simple_axis_fifo.m_axis_tdata[127:0]
+@28
+simple_axis_fifo_tb.u_simple_axis_fifo.wr_full
+simple_axis_fifo_tb.u_simple_axis_fifo.rd_empty
+@22
+simple_axis_fifo_tb.u_simple_axis_fifo.almost_full_th[3:0]
+simple_axis_fifo_tb.u_simple_axis_fifo.rd_dat_cnt[3:0]
+@24
+simple_axis_fifo_tb.u_simple_axis_fifo.cnt_data[2:0]
+@22
+simple_axis_fifo_tb.u_simple_axis_fifo.dout[127:0]
+@28
+simple_axis_fifo_tb.u_simple_axis_fifo.dout_last
+simple_axis_fifo_tb.u_simple_axis_fifo.dout_vld
+simple_axis_fifo_tb.u_simple_axis_fifo.can_read_req_full
+@29
+simple_axis_fifo_tb.u_simple_axis_fifo.can_read_req_last
+[pattern_trace] 1
+[pattern_trace] 0
