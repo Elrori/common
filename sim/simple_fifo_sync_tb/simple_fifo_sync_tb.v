@@ -1,5 +1,5 @@
 `timescale 1ns/ 1ps
-module simple_fifo_tb();
+module simple_fifo_sync_tb();
 parameter DATA_WIDTH=8;
 parameter ADDR_WIDTH=4;
 reg         clk=0;
@@ -15,10 +15,10 @@ wire  [ADDR_WIDTH:0]  dat_cnt ;
 
 
 always #10 clk <= ~clk;
-simple_fifo#(
+simple_fifo_sync#(
     .DATA_WIDTH(DATA_WIDTH),
     .ADDR_WIDTH(ADDR_WIDTH)
-) simple_fifo_tb(
+) simple_fifo_sync_tb(
     .rst     (rst),    
     .clk     (clk), 
     .wr_ena  (wr_ena  ),    
@@ -57,7 +57,7 @@ integer i;
 integer ret;
 initial begin
     $dumpfile("wave.vcd");
-    $dumpvars(0,simple_fifo_tb );
+    $dumpvars(0,simple_fifo_sync_tb );
     #10 rst = 0;
     @(posedge clk)#0;
     $display("--test 1");

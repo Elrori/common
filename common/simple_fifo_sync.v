@@ -3,7 +3,7 @@
 *   Origin: 
 *   EE    : hel
 */
-module simple_fifo
+module simple_fifo_sync
 #(
     parameter integer DATA_WIDTH = 16 ,
     parameter integer ADDR_WIDTH = 8   // DEEP = 2**ADDR_WIDTH 
