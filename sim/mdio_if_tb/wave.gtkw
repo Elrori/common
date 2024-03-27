@@ -1,0 +1,85 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Wed Mar 27 06:32:25 2024
+[*]
+[dumpfile] "E:\gitspace\common\sim\mdio_if_tb\wave.vcd"
+[dumpfile_mtime] "Wed Mar 27 06:27:43 2024"
+[dumpfile_size] 99828
+[savefile] "E:\gitspace\common\sim\mdio_if_tb\wave.gtkw"
+[timestart] 12732000
+[size] 1352 600
+[pos] -1 -1
+*-19.000000 14015000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] mdio_if_tb.
+[sst_width] 197
+[signals_width] 150
+[sst_expanded] 1
+[sst_vpaned_height] 153
+@420
+mdio_if_tb.DIV
+@28
+mdio_if_tb.clk
+mdio_if_tb.rst
+mdio_if_tb.mdio
+mdio_if_tb.mdc
+mdio_if_tb.mdio_if_inst.mdi
+mdio_if_tb.op_ena
+mdio_if_tb.op_rdwr
+@c00022
+mdio_if_tb.op_phya[4:0]
+@28
+(0)mdio_if_tb.op_phya[4:0]
+(1)mdio_if_tb.op_phya[4:0]
+(2)mdio_if_tb.op_phya[4:0]
+(3)mdio_if_tb.op_phya[4:0]
+(4)mdio_if_tb.op_phya[4:0]
+@1401200
+-group_end
+@22
+mdio_if_tb.op_rega[4:0]
+mdio_if_tb.op_din[15:0]
+@c00022
+mdio_if_tb.op_dout[15:0]
+@28
+(0)mdio_if_tb.op_dout[15:0]
+(1)mdio_if_tb.op_dout[15:0]
+(2)mdio_if_tb.op_dout[15:0]
+(3)mdio_if_tb.op_dout[15:0]
+(4)mdio_if_tb.op_dout[15:0]
+(5)mdio_if_tb.op_dout[15:0]
+(6)mdio_if_tb.op_dout[15:0]
+(7)mdio_if_tb.op_dout[15:0]
+(8)mdio_if_tb.op_dout[15:0]
+(9)mdio_if_tb.op_dout[15:0]
+(10)mdio_if_tb.op_dout[15:0]
+(11)mdio_if_tb.op_dout[15:0]
+(12)mdio_if_tb.op_dout[15:0]
+(13)mdio_if_tb.op_dout[15:0]
+(14)mdio_if_tb.op_dout[15:0]
+(15)mdio_if_tb.op_dout[15:0]
+@1401200
+-group_end
+@28
+mdio_if_tb.op_done
+mdio_if_tb.mdio_if_inst.op_ena_period
+@24
+mdio_if_tb.mdio_if_inst.cnt0[10:0]
+@25
+mdio_if_tb.mdio_if_inst.cnt1[6:0]
+@c00028
+mdio_if_tb.mdio_if_inst.op_add_buf[9:0]
+@28
+(0)mdio_if_tb.mdio_if_inst.op_add_buf[9:0]
+(1)mdio_if_tb.mdio_if_inst.op_add_buf[9:0]
+(2)mdio_if_tb.mdio_if_inst.op_add_buf[9:0]
+(3)mdio_if_tb.mdio_if_inst.op_add_buf[9:0]
+(4)mdio_if_tb.mdio_if_inst.op_add_buf[9:0]
+(5)mdio_if_tb.mdio_if_inst.op_add_buf[9:0]
+(6)mdio_if_tb.mdio_if_inst.op_add_buf[9:0]
+(7)mdio_if_tb.mdio_if_inst.op_add_buf[9:0]
+(8)mdio_if_tb.mdio_if_inst.op_add_buf[9:0]
+(9)mdio_if_tb.mdio_if_inst.op_add_buf[9:0]
+@1401200
+-group_end
+[pattern_trace] 1
+[pattern_trace] 0
