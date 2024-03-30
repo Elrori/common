@@ -1,0 +1,92 @@
+[*]
+[*] GTKWave Analyzer v3.3.71 (w)1999-2016 BSI
+[*] Sat Mar 30 13:06:02 2024
+[*]
+[dumpfile] "\\wsl.localhost\Ubuntu\home\hel\common\sim\mdio_if_apb_tb\wave.vcd"
+[dumpfile_mtime] "Sat Mar 30 13:05:15 2024"
+[dumpfile_size] 88238
+[savefile] "\\wsl.localhost\Ubuntu\home\hel\common\sim\mdio_if_apb_tb\wave.gtkw"
+[timestart] 930000
+[size] 2560 1351
+[pos] -1 -1
+*-20.343111 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] mdio_if_apb_tb.
+[sst_width] 239
+[signals_width] 203
+[sst_expanded] 1
+[sst_vpaned_height] 410
+@28
+mdio_if_apb_tb.mdio_if_apb_inst.rst
+@22
+mdio_if_apb_tb.mdio_if_apb_inst.bus_sel[3:0]
+@28
+mdio_if_apb_tb.mdio_if_apb_inst.clk
+mdio_if_apb_tb.mdio_if_apb_inst.mdc
+@800022
+mdio_if_apb_tb.mdio[4:0]
+@28
+(0)mdio_if_apb_tb.mdio[4:0]
+(1)mdio_if_apb_tb.mdio[4:0]
+(2)mdio_if_apb_tb.mdio[4:0]
+@29
+(3)mdio_if_apb_tb.mdio[4:0]
+@28
+(4)mdio_if_apb_tb.mdio[4:0]
+@1001200
+-group_end
+@c00022
+mdio_if_apb_tb.mdio_if_apb_inst.mdi[4:0]
+@28
+(0)mdio_if_apb_tb.mdio_if_apb_inst.mdi[4:0]
+(1)mdio_if_apb_tb.mdio_if_apb_inst.mdi[4:0]
+(2)mdio_if_apb_tb.mdio_if_apb_inst.mdi[4:0]
+(3)mdio_if_apb_tb.mdio_if_apb_inst.mdi[4:0]
+(4)mdio_if_apb_tb.mdio_if_apb_inst.mdi[4:0]
+@1401200
+-group_end
+@800022
+mdio_if_apb_tb.mdio_if_apb_inst.mdo[4:0]
+@28
+(0)mdio_if_apb_tb.mdio_if_apb_inst.mdo[4:0]
+(1)mdio_if_apb_tb.mdio_if_apb_inst.mdo[4:0]
+(2)mdio_if_apb_tb.mdio_if_apb_inst.mdo[4:0]
+(3)mdio_if_apb_tb.mdio_if_apb_inst.mdo[4:0]
+(4)mdio_if_apb_tb.mdio_if_apb_inst.mdo[4:0]
+@1001200
+-group_end
+@800022
+mdio_if_apb_tb.mdio_if_apb_inst.mdt[4:0]
+@28
+(0)mdio_if_apb_tb.mdio_if_apb_inst.mdt[4:0]
+(1)mdio_if_apb_tb.mdio_if_apb_inst.mdt[4:0]
+(2)mdio_if_apb_tb.mdio_if_apb_inst.mdt[4:0]
+(3)mdio_if_apb_tb.mdio_if_apb_inst.mdt[4:0]
+(4)mdio_if_apb_tb.mdio_if_apb_inst.mdt[4:0]
+@1001200
+-group_end
+@28
+mdio_if_apb_tb.mdio_if_apb_inst.mdo_w
+mdio_if_apb_tb.mdio_if_apb_inst.mdi_w
+mdio_if_apb_tb.mdio_if_apb_inst.mdt_w
+mdio_if_apb_tb.mdio_if_apb_inst.op_ena
+mdio_if_apb_tb.mdio_if_apb_inst.op_rdwr
+@22
+mdio_if_apb_tb.mdio_if_apb_inst.op_phya[4:0]
+mdio_if_apb_tb.mdio_if_apb_inst.op_rega[4:0]
+mdio_if_apb_tb.mdio_if_apb_inst.op_din[15:0]
+mdio_if_apb_tb.mdio_if_apb_inst.op_dout[15:0]
+@28
+mdio_if_apb_tb.mdio_if_apb_inst.op_done
+mdio_if_apb_tb.mdio_if_apb_inst.psel
+mdio_if_apb_tb.mdio_if_apb_inst.penable
+mdio_if_apb_tb.mdio_if_apb_inst.pwrite
+@22
+mdio_if_apb_tb.mdio_if_apb_inst.paddr[15:0]
+mdio_if_apb_tb.mdio_if_apb_inst.pwdata[15:0]
+mdio_if_apb_tb.mdio_if_apb_inst.prdata[15:0]
+@28
+mdio_if_apb_tb.mdio_if_apb_inst.pready
+@22
+mdio_if_apb_tb.mdio_if_apb_inst.st[3:0]
+[pattern_trace] 1
+[pattern_trace] 0
