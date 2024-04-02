@@ -21,11 +21,16 @@ module phy_dlyset #(
     // DLY
     input   wire            set_ena,
     input   wire [8 :0]     set_rxcdlyena,// D C2 C1 B3 A3 B2 A2 B1 A1
-    input   wire [4*9-1 :0] set_rxcdlysel // 
+    input   wire [4*9-1 :0] set_rxcdlysel,// D C2 C1 B3 A3 B2 A2 B1 A1
+    // DEBUG
+    output  wire [15:0] dbg_rdback,
+    output  wire        dbg_rdback_trg
+
 );
 localparam MASK_2NS = 16'b0000_0001_0000_0000;
 localparam MASK_DEL = 16'b0011_1100_0000_0000;
-reg [2:0] state_rdset;
+
+reg [3:0] state_rdset;
 reg [3:0] state_chips;
 reg psel;
 reg pwrite;
@@ -41,8 +46,9 @@ reg [8:0]chip_sel;
 
 reg [15:0]buf_a;
 wire rdset_fin;
-assign rdset_fin = state_rdset == 0 && pready;
-
+assign rdset_fin  = ((state_rdset == 8) && pready);
+assign dbg_rdback = buf_a;
+assign dbg_rdback_trg = pready & (~pwrite);
 always @(posedge clk or posedge rst) begin
     if (rst) begin
         state_chips <= 'd0;
@@ -137,7 +143,7 @@ always @(posedge clk or posedge rst) begin
                     chip_sel    <= {4'd4,PHYA_D};
                 end
             end
-            9:begin
+            9:begin // fin
                 if (rdset_fin) begin
                     state_chips <= 'd0;
                     start_rdset <= 1'd0;
@@ -158,10 +164,8 @@ always @(posedge clk or posedge rst) begin
     end else begin
         case (state_rdset)
             0:begin // wr 1e a001
-                if (pready) begin // plus
-                    psel        <= 1'd0;
-                end else if(start_rdset)begin
-                    state_rdset <= 3'd1;
+                if(start_rdset)begin
+                    state_rdset <= 4'd1;
                     psel        <= 1'd1;
                     pwrite      <= 1'd1;
                     paddr       <= {chip_sel,1'd0,5'h1E,1'd0};
@@ -170,7 +174,7 @@ always @(posedge clk or posedge rst) begin
             end 
             1:begin // A = rd 1f
                 if (pready) begin
-                    state_rdset <= 3'd2;
+                    state_rdset <= 4'd2;
                     psel        <= 1'd1;
                     pwrite      <= 1'd0;
                     paddr       <= {chip_sel,1'd0,5'h1F,1'd0};
@@ -178,7 +182,7 @@ always @(posedge clk or posedge rst) begin
             end
             2:begin //wr 1e a001
                 if (pready) begin
-                    state_rdset <= 3'd3;
+                    state_rdset <= 4'd3;
                     buf_a       <= prdata;
                     psel        <= 1'd1;
                     pwrite      <= 1'd1;
@@ -188,7 +192,7 @@ always @(posedge clk or posedge rst) begin
             end 
             3:begin // wr 1f B
                 if (pready) begin
-                    state_rdset <= 3'd4;
+                    state_rdset <= 4'd4;
                     psel        <= 1'd1;
                     pwrite      <= 1'd1;
                     paddr       <= {chip_sel,1'd0,5'h1F,1'd0};
@@ -198,8 +202,8 @@ always @(posedge clk or posedge rst) begin
 
 
             4:begin // wr 1e a003
-                if (start_rdset) begin
-                    state_rdset <= 3'd5;
+                if (pready) begin
+                    state_rdset <= 4'd5;
                     psel        <= 1'd1;
                     pwrite      <= 1'd1;
                     paddr       <= {chip_sel,1'd0,5'h1E,1'd0};
@@ -208,7 +212,7 @@ always @(posedge clk or posedge rst) begin
             end 
             5:begin // A = rd 1f
                 if (pready) begin
-                    state_rdset <= 3'd6;
+                    state_rdset <= 4'd6;
                     psel        <= 1'd1;
                     pwrite      <= 1'd0;
                     paddr       <= {chip_sel,1'd0,5'h1F,1'd0};
@@ -216,7 +220,7 @@ always @(posedge clk or posedge rst) begin
             end
             6:begin //wr 1e a003
                 if (pready) begin
-                    state_rdset <= 3'd7;
+                    state_rdset <= 4'd7;
                     buf_a       <= prdata;
                     psel        <= 1'd1;
                     pwrite      <= 1'd1;
@@ -226,11 +230,17 @@ always @(posedge clk or posedge rst) begin
             end 
             7:begin // wr 1f B
                 if (pready) begin
-                    state_rdset <= 3'd0;
+                    state_rdset <= 4'd8;
                     psel        <= 1'd1;
                     pwrite      <= 1'd1;
                     paddr       <= {chip_sel,1'd0,5'h1F,1'd0};
                     pwdata      <= {buf_a[15:14],chip_dlysel,buf_a[9:0]};
+                end
+            end
+            8:begin // fin
+                if (pready) begin
+                    state_rdset <= 4'd0;
+                    psel        <= 1'd0;
                 end
             end
             default: ;

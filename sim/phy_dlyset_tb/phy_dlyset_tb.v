@@ -19,11 +19,11 @@ reg  clk = 0;
 reg  rst = 1;
 wire  mdc;
 wire [4 :0] mdo;
-reg  [4 :0] mdi = 'd0;
+reg  [4 :0] mdi = 'b11111;
 wire [4 :0] mdt;
 reg  set_ena = 0;
-reg  [8 :0] set_rxcdlyena = 0;
-reg  [4*9-1 :0] set_rxcdlysel = 0;
+reg  [8 :0] set_rxcdlyena = {9{1'd1}};
+reg  [4*9-1 :0] set_rxcdlysel = {4'd8,4'd7,4'd6,4'd5,4'd4,4'd3,4'd2,4'd1,4'd0};
 
 phy_dlyset # (
   .DIV(DIV),
@@ -65,6 +65,8 @@ initial begin
   set_ena = 0;
 
   #100000;
+  wait(phy_dlyset_inst.state_chips==9 && phy_dlyset_inst.rdset_fin)
+  #1000;
   $finish;
 
 end

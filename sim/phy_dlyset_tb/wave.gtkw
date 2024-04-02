@@ -1,0 +1,103 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Tue Apr 02 12:10:25 2024
+[*]
+[dumpfile] "\\wsl.localhost\Ubuntu-22.04\home\helrori\workspace\common\sim\phy_dlyset_tb\wave.vcd"
+[dumpfile_mtime] "Tue Apr 02 12:08:34 2024"
+[dumpfile_size] 8776031
+[savefile] "\\wsl.localhost\Ubuntu-22.04\home\helrori\workspace\common\sim\phy_dlyset_tb\wave.gtkw"
+[timestart] 74809000
+[size] 1707 996
+[pos] -1 -1
+*-16.217043 75027200 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] phy_dlyset_tb.
+[treeopen] phy_dlyset_tb.phy_dlyset_inst.
+[sst_width] 197
+[signals_width] 182
+[sst_expanded] 1
+[sst_vpaned_height] 292
+@28
+phy_dlyset_tb.phy_dlyset_inst.clk
+phy_dlyset_tb.phy_dlyset_inst.rst
+@22
+phy_dlyset_tb.phy_dlyset_inst.buf_a[15:0]
+@28
+phy_dlyset_tb.phy_dlyset_inst.chip_2ns
+@24
+phy_dlyset_tb.phy_dlyset_inst.chip_dlysel[3:0]
+@c00024
+phy_dlyset_tb.phy_dlyset_inst.chip_sel[8:0]
+@28
+(0)phy_dlyset_tb.phy_dlyset_inst.chip_sel[8:0]
+(1)phy_dlyset_tb.phy_dlyset_inst.chip_sel[8:0]
+(2)phy_dlyset_tb.phy_dlyset_inst.chip_sel[8:0]
+(3)phy_dlyset_tb.phy_dlyset_inst.chip_sel[8:0]
+@200
+-
+@28
+(4)phy_dlyset_tb.phy_dlyset_inst.chip_sel[8:0]
+(5)phy_dlyset_tb.phy_dlyset_inst.chip_sel[8:0]
+(6)phy_dlyset_tb.phy_dlyset_inst.chip_sel[8:0]
+(7)phy_dlyset_tb.phy_dlyset_inst.chip_sel[8:0]
+(8)phy_dlyset_tb.phy_dlyset_inst.chip_sel[8:0]
+@1401200
+-group_end
+@28
+phy_dlyset_tb.phy_dlyset_inst.mdc
+@22
+phy_dlyset_tb.phy_dlyset_inst.mdi[4:0]
+@800022
+phy_dlyset_tb.phy_dlyset_inst.mdo[4:0]
+@28
+(0)phy_dlyset_tb.phy_dlyset_inst.mdo[4:0]
+(1)phy_dlyset_tb.phy_dlyset_inst.mdo[4:0]
+(2)phy_dlyset_tb.phy_dlyset_inst.mdo[4:0]
+(3)phy_dlyset_tb.phy_dlyset_inst.mdo[4:0]
+(4)phy_dlyset_tb.phy_dlyset_inst.mdo[4:0]
+@1001200
+-group_end
+@22
+phy_dlyset_tb.phy_dlyset_inst.mdt[4:0]
+@200
+-
+@28
+phy_dlyset_tb.phy_dlyset_inst.psel
+phy_dlyset_tb.phy_dlyset_inst.pwrite
+@22
+phy_dlyset_tb.phy_dlyset_inst.paddr[15:0]
+@23
+phy_dlyset_tb.phy_dlyset_inst.pwdata[15:0]
+@22
+phy_dlyset_tb.phy_dlyset_inst.prdata[15:0]
+@28
+phy_dlyset_tb.phy_dlyset_inst.pready
+@200
+-
+@28
+phy_dlyset_tb.phy_dlyset_inst.rdset_fin
+phy_dlyset_tb.phy_dlyset_inst.start_rdset
+@24
+[color] 2
+phy_dlyset_tb.phy_dlyset_inst.state_chips[3:0]
+[color] 2
+phy_dlyset_tb.phy_dlyset_inst.state_rdset[2:0]
+@28
+phy_dlyset_tb.phy_dlyset_inst.set_ena
+@c00022
+phy_dlyset_tb.phy_dlyset_inst.set_rxcdlyena[8:0]
+@28
+(0)phy_dlyset_tb.phy_dlyset_inst.set_rxcdlyena[8:0]
+(1)phy_dlyset_tb.phy_dlyset_inst.set_rxcdlyena[8:0]
+(2)phy_dlyset_tb.phy_dlyset_inst.set_rxcdlyena[8:0]
+(3)phy_dlyset_tb.phy_dlyset_inst.set_rxcdlyena[8:0]
+(4)phy_dlyset_tb.phy_dlyset_inst.set_rxcdlyena[8:0]
+(5)phy_dlyset_tb.phy_dlyset_inst.set_rxcdlyena[8:0]
+(6)phy_dlyset_tb.phy_dlyset_inst.set_rxcdlyena[8:0]
+(7)phy_dlyset_tb.phy_dlyset_inst.set_rxcdlyena[8:0]
+(8)phy_dlyset_tb.phy_dlyset_inst.set_rxcdlyena[8:0]
+@1401200
+-group_end
+@22
+phy_dlyset_tb.phy_dlyset_inst.set_rxcdlysel[35:0]
+[pattern_trace] 1
+[pattern_trace] 0
