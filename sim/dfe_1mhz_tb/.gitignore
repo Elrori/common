@@ -1,0 +1,5 @@
+/.tmp/
+/stimulus.hex
+/dfe_chain_tb.vvp
+/out_*.txt
+/sim_output.log

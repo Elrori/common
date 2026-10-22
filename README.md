@@ -1,5 +1,7 @@
 # common
 
+**Optional HF/shortwave 1 MHz DFE:** [CIC 18/20-bit + symmetric 47-tap FIR design, test data, FPGA resource estimates and receiver benchmarks](docs/dfe_1mhz.md).
+
 ```
 common verilog module 
   |
