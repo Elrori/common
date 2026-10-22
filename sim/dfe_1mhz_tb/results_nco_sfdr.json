@@ -1,0 +1,223 @@
+{
+  "method": "Icarus 12/14/16-bit actual NCO RTL, dither on/off; coherent 65536 FFT",
+  "sample_rate_hz": 40000000,
+  "fft_length": 65536,
+  "limitations": "No analog ADC, no complex DFE filter, and no noncoherent LO sweep",
+  "frequencies": [
+    {
+      "fft_bin": 4097,
+      "fcw": 268500992,
+      "lo_hz": 2500610.3515625,
+      "modes": {
+        "12off": {
+          "sfdr_db_c": 86.38660115193028,
+          "sndr_whole_nyquist_db": 73.77724152549332,
+          "noise_ratio_near_carrier_1mhz_db": 92.63697734720806,
+          "largest_spur_bin": 36865
+        },
+        "12on": {
+          "sfdr_db_c": 101.18968228280976,
+          "sndr_whole_nyquist_db": 73.53647571688141,
+          "noise_ratio_near_carrier_1mhz_db": 90.89235089659071,
+          "largest_spur_bin": 557
+        },
+        "14off": {
+          "sfdr_db_c": 86.38660115193932,
+          "sndr_whole_nyquist_db": 83.20125135418908,
+          "noise_ratio_near_carrier_1mhz_db": 101.57931474158333,
+          "largest_spur_bin": 36865
+        },
+        "14on": {
+          "sfdr_db_c": 113.6754923371131,
+          "sndr_whole_nyquist_db": 81.4900117226727,
+          "noise_ratio_near_carrier_1mhz_db": 97.33503667511579,
+          "largest_spur_bin": 21605
+        },
+        "16off": {
+          "sfdr_db_c": 86.38660115193588,
+          "sndr_whole_nyquist_db": 86.10287697650847,
+          "noise_ratio_near_carrier_1mhz_db": 114.71540867146756,
+          "largest_spur_bin": 36865
+        },
+        "16on": {
+          "sfdr_db_c": 121.18907360415395,
+          "sndr_whole_nyquist_db": 83.2303837656712,
+          "noise_ratio_near_carrier_1mhz_db": 99.23416899943373,
+          "largest_spur_bin": 47645
+        }
+      }
+    },
+    {
+      "fft_bin": 8193,
+      "fcw": 536936448,
+      "lo_hz": 5000610.3515625,
+      "modes": {
+        "12off": {
+          "sfdr_db_c": 86.38660115193814,
+          "sndr_whole_nyquist_db": 73.77724152549374,
+          "noise_ratio_near_carrier_1mhz_db": 91.86301785420753,
+          "largest_spur_bin": 40961
+        },
+        "12on": {
+          "sfdr_db_c": 101.16935304677278,
+          "sndr_whole_nyquist_db": 73.53514446008897,
+          "noise_ratio_near_carrier_1mhz_db": 89.98932115376029,
+          "largest_spur_bin": 53805
+        },
+        "14off": {
+          "sfdr_db_c": 86.38660115194718,
+          "sndr_whole_nyquist_db": 83.20125135419298,
+          "noise_ratio_near_carrier_1mhz_db": 102.61552998504243,
+          "largest_spur_bin": 40961
+        },
+        "14on": {
+          "sfdr_db_c": 113.53486592191977,
+          "sndr_whole_nyquist_db": 81.50612324965594,
+          "noise_ratio_near_carrier_1mhz_db": 97.23821041286989,
+          "largest_spur_bin": 42085
+        },
+        "16off": {
+          "sfdr_db_c": 86.38660115193524,
+          "sndr_whole_nyquist_db": 86.10287697650787,
+          "noise_ratio_near_carrier_1mhz_db": 115.23994285269636,
+          "largest_spur_bin": 40961
+        },
+        "16on": {
+          "sfdr_db_c": 121.40583519526507,
+          "sndr_whole_nyquist_db": 83.23705567360582,
+          "noise_ratio_near_carrier_1mhz_db": 99.23868650858203,
+          "largest_spur_bin": 31765
+        }
+      }
+    },
+    {
+      "fft_bin": 13107,
+      "fcw": 858980352,
+      "lo_hz": 7999877.9296875,
+      "modes": {
+        "12off": {
+          "sfdr_db_c": 86.386601151929,
+          "sndr_whole_nyquist_db": 73.7772415254932,
+          "noise_ratio_near_carrier_1mhz_db": 87.88868059606115,
+          "largest_spur_bin": 45875
+        },
+        "12on": {
+          "sfdr_db_c": 101.67550568144178,
+          "sndr_whole_nyquist_db": 73.54880851720863,
+          "noise_ratio_near_carrier_1mhz_db": 87.06483231462238,
+          "largest_spur_bin": 62967
+        },
+        "14off": {
+          "sfdr_db_c": 86.38660115192955,
+          "sndr_whole_nyquist_db": 83.20125135418462,
+          "noise_ratio_near_carrier_1mhz_db": 99.72097433573303,
+          "largest_spur_bin": 45875
+        },
+        "14on": {
+          "sfdr_db_c": 114.52310907700917,
+          "sndr_whole_nyquist_db": 81.49409004499273,
+          "noise_ratio_near_carrier_1mhz_db": 96.15628408669012,
+          "largest_spur_bin": 12587
+        },
+        "16off": {
+          "sfdr_db_c": 86.38660115194364,
+          "sndr_whole_nyquist_db": 86.10287697651577,
+          "noise_ratio_near_carrier_1mhz_db": 111.03787372491536,
+          "largest_spur_bin": 45875
+        },
+        "16on": {
+          "sfdr_db_c": 121.16671817970638,
+          "sndr_whole_nyquist_db": 83.22843490194167,
+          "noise_ratio_near_carrier_1mhz_db": 99.0523315193822,
+          "largest_spur_bin": 52927
+        }
+      }
+    },
+    {
+      "fft_bin": 20137,
+      "fcw": 1319698432,
+      "lo_hz": 12290649.4140625,
+      "modes": {
+        "12off": {
+          "sfdr_db_c": 86.38660115194243,
+          "sndr_whole_nyquist_db": 73.77724152549393,
+          "noise_ratio_near_carrier_1mhz_db": 89.77991201303789,
+          "largest_spur_bin": 52905
+        },
+        "12on": {
+          "sfdr_db_c": 101.47306796880466,
+          "sndr_whole_nyquist_db": 73.54805075624213,
+          "noise_ratio_near_carrier_1mhz_db": 89.2759857523461,
+          "largest_spur_bin": 54709
+        },
+        "14off": {
+          "sfdr_db_c": 86.38660115194452,
+          "sndr_whole_nyquist_db": 83.20125135419156,
+          "noise_ratio_near_carrier_1mhz_db": 102.41128669028187,
+          "largest_spur_bin": 52905
+        },
+        "14on": {
+          "sfdr_db_c": 114.75039715496456,
+          "sndr_whole_nyquist_db": 81.4922785262066,
+          "noise_ratio_near_carrier_1mhz_db": 97.62436280579065,
+          "largest_spur_bin": 33893
+        },
+        "16off": {
+          "sfdr_db_c": 86.38660115193879,
+          "sndr_whole_nyquist_db": 86.1028769765111,
+          "noise_ratio_near_carrier_1mhz_db": 114.93960700929237,
+          "largest_spur_bin": 52905
+        },
+        "16on": {
+          "sfdr_db_c": 120.93176649783807,
+          "sndr_whole_nyquist_db": 83.23060063483013,
+          "noise_ratio_near_carrier_1mhz_db": 99.2135428029232,
+          "largest_spur_bin": 24465
+        }
+      }
+    },
+    {
+      "fft_bin": 28673,
+      "fcw": 1879113728,
+      "lo_hz": 17500610.3515625,
+      "modes": {
+        "12off": {
+          "sfdr_db_c": 86.38660115193741,
+          "sndr_whole_nyquist_db": 73.77724152549371,
+          "noise_ratio_near_carrier_1mhz_db": 92.60787629753762,
+          "largest_spur_bin": 61441
+        },
+        "12on": {
+          "sfdr_db_c": 101.51180217067883,
+          "sndr_whole_nyquist_db": 73.54588763726584,
+          "noise_ratio_near_carrier_1mhz_db": 91.09954034617036,
+          "largest_spur_bin": 57901
+        },
+        "14off": {
+          "sfdr_db_c": 86.38660115194645,
+          "sndr_whole_nyquist_db": 83.20125135419268,
+          "noise_ratio_near_carrier_1mhz_db": 101.56031152268176,
+          "largest_spur_bin": 61441
+        },
+        "14on": {
+          "sfdr_db_c": 114.97987448402722,
+          "sndr_whole_nyquist_db": 81.50247651431846,
+          "noise_ratio_near_carrier_1mhz_db": 97.38239619899397,
+          "largest_spur_bin": 57113
+        },
+        "16off": {
+          "sfdr_db_c": 86.38660115193589,
+          "sndr_whole_nyquist_db": 86.10287697650834,
+          "noise_ratio_near_carrier_1mhz_db": 114.74524484162755,
+          "largest_spur_bin": 61441
+        },
+        "16on": {
+          "sfdr_db_c": 121.18534657879863,
+          "sndr_whole_nyquist_db": 83.23159630874679,
+          "noise_ratio_near_carrier_1mhz_db": 99.24986914068958,
+          "largest_spur_bin": 17461
+        }
+      }
+    }
+  ]
+}

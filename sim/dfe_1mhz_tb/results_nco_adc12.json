@@ -1,0 +1,481 @@
+{
+  "adc_bits": 12,
+  "adc_rate_hz": 40000000,
+  "adc_samples_per_case": 262144,
+  "nco_bits_mixer_bits": [
+    "12_16",
+    "12_18",
+    "14_18",
+    "16_20"
+  ],
+  "nco_dither": true,
+  "downstream": "unchanged CIC5 R16 M2 20-bit + FIR47 decimate2",
+  "methods": "Icarus 4-path complete RTL, identical quantized ADC12 waveform, 1-MHz ROI",
+  "limitations": "No real ADC analog nonlinearity, sampling jitter or Vivado timing",
+  "cases": [
+    {
+      "name": "237k AWGN seed1",
+      "tones": [
+        [
+          237060.546875,
+          1500
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "modes": {
+        "12_16": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2576140.806580695
+          },
+          "strongest_tone_amplitude": 2576140.806580695,
+          "inband_sinad_db": 77.91548738332332,
+          "roi_rms": 2576140.8273963872,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.0
+        },
+        "12_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2576143.929313723
+          },
+          "strongest_tone_amplitude": 2576143.929313723,
+          "inband_sinad_db": 77.97606946792136,
+          "roi_rms": 2576143.9498410868,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.06058208459803893
+        },
+        "14_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2577058.3078199043
+          },
+          "strongest_tone_amplitude": 2577058.3078199043,
+          "inband_sinad_db": 79.31378549811737,
+          "roi_rms": 2577058.322910824,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 1.398298114794045
+        },
+        "16_20": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2577311.183435351
+          },
+          "strongest_tone_amplitude": 2577311.183435351,
+          "inband_sinad_db": 79.42230395367869,
+          "roi_rms": 2577311.1981553053,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 1.5068165703553689
+        }
+      }
+    },
+    {
+      "name": "237k AWGN seed2",
+      "tones": [
+        [
+          237060.546875,
+          1500
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 2,
+      "adc_clipped_samples": 0,
+      "modes": {
+        "12_16": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2576136.3365664827
+          },
+          "strongest_tone_amplitude": 2576136.3365664827,
+          "inband_sinad_db": 77.93974397279544,
+          "roi_rms": 2576136.3572662016,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.0
+        },
+        "12_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2576139.6876369203
+          },
+          "strongest_tone_amplitude": 2576139.6876369203,
+          "inband_sinad_db": 78.00193123366387,
+          "roi_rms": 2576139.7080423753,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.062187260868427074
+        },
+        "14_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2577053.662114215
+          },
+          "strongest_tone_amplitude": 2577053.662114215,
+          "inband_sinad_db": 79.45718986176688,
+          "roi_rms": 2577053.676714942,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 1.5174458889714373
+        },
+        "16_20": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2577307.0305725643
+          },
+          "strongest_tone_amplitude": 2577307.0305725643,
+          "inband_sinad_db": 79.51023861545517,
+          "roi_rms": 2577307.0449974476,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 1.5704946426597246
+        }
+      }
+    },
+    {
+      "name": "450k edge AWGN",
+      "tones": [
+        [
+          449951.171875,
+          1500
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "modes": {
+        "12_16": {
+          "complex_tone_amplitudes": {
+            "449951.171875": 2574220.271778946
+          },
+          "strongest_tone_amplitude": 2574220.271778946,
+          "inband_sinad_db": 77.82301829026456,
+          "roi_rms": 2574220.2930267416,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.0
+        },
+        "12_18": {
+          "complex_tone_amplitudes": {
+            "449951.171875": 2574223.687817825
+          },
+          "strongest_tone_amplitude": 2574223.687817825,
+          "inband_sinad_db": 77.88563063942729,
+          "roi_rms": 2574223.708761516,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.06261234916273395
+        },
+        "14_18": {
+          "complex_tone_amplitudes": {
+            "449951.171875": 2575136.768612286
+          },
+          "strongest_tone_amplitude": 2575136.768612286,
+          "inband_sinad_db": 79.3115744238057,
+          "roi_rms": 2575136.7836996326,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 1.4885561335411381
+        },
+        "16_20": {
+          "complex_tone_amplitudes": {
+            "449951.171875": 2575389.965942462
+          },
+          "strongest_tone_amplitude": 2575389.965942462,
+          "inband_sinad_db": 79.37283603233494,
+          "roi_rms": 2575389.980819943,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 1.5498177420703882
+        }
+      }
+    },
+    {
+      "name": "550k strong blocker",
+      "tones": [
+        [
+          237060.546875,
+          350
+        ],
+        [
+          550048.828125,
+          1300
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "modes": {
+        "12_16": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 601100.4234686901,
+            "550048.828125": 1960566.775960207
+          },
+          "strongest_tone_amplitude": 601100.4234686901,
+          "inband_sinad_db": 66.58583321775991,
+          "roi_rms": 601100.4894367472,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.0
+        },
+        "12_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 601099.2541021365,
+            "550048.828125": 1960567.2091881814
+          },
+          "strongest_tone_amplitude": 601099.2541021365,
+          "inband_sinad_db": 66.62570130360696,
+          "roi_rms": 601099.3194672529,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.03986808584704704
+        },
+        "14_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 601313.175951813,
+            "550048.828125": 1961264.0993761208
+          },
+          "strongest_tone_amplitude": 601313.175951813,
+          "inband_sinad_db": 66.83391753642789,
+          "roi_rms": 601313.2382792041,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.24808431866797775
+        },
+        "16_20": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 601371.9732637575,
+            "550048.828125": 1961455.7976208145
+          },
+          "strongest_tone_amplitude": 601371.9732637575,
+          "inband_sinad_db": 66.85165441874861,
+          "roi_rms": 601372.035343188,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.26582120098869666
+        }
+      }
+    },
+    {
+      "name": "750k strong blocker",
+      "tones": [
+        [
+          237060.546875,
+          350
+        ],
+        [
+          750000.0,
+          1300
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "modes": {
+        "12_16": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 601099.5064717534,
+            "750000.0": 29.92577075712344
+          },
+          "strongest_tone_amplitude": 601099.5064717534,
+          "inband_sinad_db": 66.51053469440372,
+          "roi_rms": 601099.5735934433,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.0
+        },
+        "12_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 601098.8892865307,
+            "750000.0": 29.24535735060144
+          },
+          "strongest_tone_amplitude": 601098.8892865307,
+          "inband_sinad_db": 66.55524410678966,
+          "roi_rms": 601098.9557206979,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.044709412385941505
+        },
+        "14_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 601313.5656703197,
+            "750000.0": 28.75755909517393
+          },
+          "strongest_tone_amplitude": 601313.5656703197,
+          "inband_sinad_db": 66.7893105487173,
+          "roi_rms": 601313.6286412238,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.27877585431357943
+        },
+        "16_20": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 601372.3423727428,
+            "750000.0": 28.77386457582413
+          },
+          "strongest_tone_amplitude": 601372.3423727428,
+          "inband_sinad_db": 66.78317360003189,
+          "roi_rms": 601372.4054388569,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.2726389056281704
+        }
+      }
+    },
+    {
+      "name": "near-LO strong blocker",
+      "tones": [
+        [
+          237060.546875,
+          300
+        ],
+        [
+          0.0,
+          1500
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "modes": {
+        "12_16": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 515234.5228899936,
+            "0.0": 1.0412502929101651e-10
+          },
+          "strongest_tone_amplitude": 515234.5228899936,
+          "inband_sinad_db": 64.85155905018489,
+          "roi_rms": 515234.6071883328,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.0
+        },
+        "12_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 515233.57863175526,
+            "0.0": 9.313225746154786e-11
+          },
+          "strongest_tone_amplitude": 515233.57863175526,
+          "inband_sinad_db": 64.8799600259194,
+          "roi_rms": 515233.6623804651,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.028400975734513167
+        },
+        "14_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 515415.2660147442,
+            "0.0": 2.0825005858203302e-10
+          },
+          "strongest_tone_amplitude": 515415.2660147442,
+          "inband_sinad_db": 65.55805296973666,
+          "roi_rms": 515415.33768219466,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.7064939195517752
+        },
+        "16_20": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 515465.94109562784,
+            "0.0": 1.0412502929101651e-10
+          },
+          "strongest_tone_amplitude": 515465.94109562784,
+          "inband_sinad_db": 65.48927900431275,
+          "roi_rms": 515466.01391418144,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.63771995412786
+        }
+      }
+    },
+    {
+      "name": "very weak + 550k",
+      "tones": [
+        [
+          237060.546875,
+          50
+        ],
+        [
+          550048.828125,
+          1600
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "modes": {
+        "12_16": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 85875.37998729566,
+            "550048.828125": 2413008.224900969
+          },
+          "strongest_tone_amplitude": 85875.37998729566,
+          "inband_sinad_db": 49.5933100483316,
+          "roi_rms": 85875.85151420133,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.0
+        },
+        "12_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 85873.61490906136,
+            "550048.828125": 2413007.2054825933
+          },
+          "strongest_tone_amplitude": 85873.61490906136,
+          "inband_sinad_db": 49.626901357850144,
+          "roi_rms": 85874.08279331619,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.033591309518541834
+        },
+        "14_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 85905.03903126938,
+            "550048.828125": 2413864.013143046
+          },
+          "strongest_tone_amplitude": 85905.03903126938,
+          "inband_sinad_db": 49.8445403942339,
+          "roi_rms": 85905.48420904906,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.2512303459023002
+        },
+        "16_20": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 85912.93634304308,
+            "550048.828125": 2414101.622422826
+          },
+          "strongest_tone_amplitude": 85912.93634304308,
+          "inband_sinad_db": 49.85102670759923,
+          "roi_rms": 85913.38089729933,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.2577166592676292
+        }
+      }
+    },
+    {
+      "name": "237k quant-only",
+      "tones": [
+        [
+          237060.546875,
+          1500
+        ]
+      ],
+      "sigma": 0.0,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "modes": {
+        "12_16": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2576144.4929950866
+          },
+          "strongest_tone_amplitude": 2576144.4929950866,
+          "inband_sinad_db": 80.07703827987733,
+          "roi_rms": 2576144.505649336,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.0
+        },
+        "12_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2576147.829153995
+          },
+          "strongest_tone_amplitude": 2576147.829153995,
+          "inband_sinad_db": 80.21515294671816,
+          "roi_rms": 2576147.8414121605,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.13811466684083484
+        },
+        "14_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2577061.89815529
+          },
+          "strongest_tone_amplitude": 2577061.89815529,
+          "inband_sinad_db": 83.07745541250372,
+          "roi_rms": 2577061.9044990875,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 3.0004171326263958
+        },
+        "16_20": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2577315.4325025487
+          },
+          "strongest_tone_amplitude": 2577315.4325025487,
+          "inband_sinad_db": 83.24464605307088,
+          "roi_rms": 2577315.4386073705,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 3.167607773193552
+        }
+      }
+    }
+  ]
+}

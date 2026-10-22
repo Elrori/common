@@ -1,0 +1,125 @@
+{
+  "adc_bits": 12,
+  "adc_rate_hz": 40000000,
+  "adc_samples_per_case": 262144,
+  "nco_bits_mixer_bits": [
+    "12_16",
+    "12_18",
+    "14_18",
+    "16_20"
+  ],
+  "nco_dither": true,
+  "downstream": "unchanged CIC5 R16 M2 20-bit + FIR47 decimate2",
+  "methods": "Icarus 4-path complete RTL, identical quantized ADC12 waveform, 1-MHz ROI",
+  "limitations": "No real ADC analog nonlinearity, sampling jitter or Vivado timing",
+  "cases": [
+    {
+      "name": "237k analog noise 3LSB",
+      "tones": [
+        [
+          237060.546875,
+          1500
+        ]
+      ],
+      "sigma": 3.0,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "modes": {
+        "12_16": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2576147.589011061
+          },
+          "strongest_tone_amplitude": 2576147.589011061,
+          "inband_sinad_db": 63.8375755703996,
+          "roi_rms": 2576148.121343759,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.0
+        },
+        "12_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2576149.940849856
+          },
+          "strongest_tone_amplitude": 2576149.940849856,
+          "inband_sinad_db": 63.84033866863258,
+          "roi_rms": 2576150.472844463,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.002763098232982486
+        },
+        "14_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2577064.6418452975
+          },
+          "strongest_tone_amplitude": 2577064.6418452975,
+          "inband_sinad_db": 63.866959476113635,
+          "roi_rms": 2577065.1707766666,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.029383905714034597
+        },
+        "16_20": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2577317.8135741083
+          },
+          "strongest_tone_amplitude": 2577317.8135741083,
+          "inband_sinad_db": 63.87098321464434,
+          "roi_rms": 2577318.342067564,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.03340764424473974
+        }
+      }
+    },
+    {
+      "name": "237k analog noise 10LSB",
+      "tones": [
+        [
+          237060.546875,
+          1500
+        ]
+      ],
+      "sigma": 10.0,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "modes": {
+        "12_16": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2576159.6373071806
+          },
+          "strongest_tone_amplitude": 2576159.6373071806,
+          "inband_sinad_db": 53.4398105457248,
+          "roi_rms": 2576165.4712373917,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": 0.0
+        },
+        "12_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2576162.304306744
+          },
+          "strongest_tone_amplitude": 2576162.304306744,
+          "inband_sinad_db": 53.43933680000283,
+          "roi_rms": 2576168.138879418,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": -0.00047374572196901
+        },
+        "14_18": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2577077.116092247
+          },
+          "strongest_tone_amplitude": 2577077.116092247,
+          "inband_sinad_db": 53.43671942837328,
+          "roi_rms": 2577082.956255454,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": -0.003091117351516459
+        },
+        "16_20": {
+          "complex_tone_amplitudes": {
+            "237060.546875": 2577330.7758716797
+          },
+          "strongest_tone_amplitude": 2577330.7758716797,
+          "inband_sinad_db": 53.437817504132205,
+          "roi_rms": 2577336.6151331384,
+          "sample_count": 8176,
+          "delta_vs_12_16_db": -0.0019930415925912826
+        }
+      }
+    }
+  ]
+}

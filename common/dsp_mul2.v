@@ -6,18 +6,22 @@
 */
 module dsp_mul2#(
     parameter I_W = 12,
-    parameter O_W = 16
+    parameter O_W = 16,
+    // Backward-compatible independent ADC/oscillator widths. The original
+    // 12x12 -> 16 path remains the default for existing instantiations.
+    parameter ADC_W = I_W,
+    parameter NCO_W = I_W
 ) 
 (
    input    wire                      clk         ,        
    input    wire                      rst_n       ,
-   input    wire  signed   [I_W-1 :0] din         ,
-   input    wire  signed   [I_W-1 :0] ain         ,
-   input    wire  signed   [I_W-1 :0] bin         ,
+   input    wire  signed   [ADC_W-1 :0] din       ,
+   input    wire  signed   [NCO_W-1 :0] ain       ,
+   input    wire  signed   [NCO_W-1 :0] bin       ,
    output   wire  signed   [O_W-1 :0] aout        , 
    output   wire  signed   [O_W-1 :0] bout
 );
-localparam M_W = I_W*2;
+localparam M_W = ADC_W+NCO_W;
 reg signed[M_W-1:0]aout_b;
 reg signed[M_W-1:0]bout_b;
 
