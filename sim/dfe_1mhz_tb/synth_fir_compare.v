@@ -1,6 +1,6 @@
 // Small synthesizable wrappers for comparing FIR footprints in Yosys.
 // Run from repository root.  All three expose exactly the same interface;
-// synthesis results are technology-independent, not Intel ALM or DSP counts.
+// XC7/Yosys mapping results are primitive-count estimates, not placed/timed Vivado results.
 module synth_fir_old (
     input wire clk, rst_n,
     input wire [15:0] din,

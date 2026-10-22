@@ -7,7 +7,7 @@
  * New optional top; sys_sw_dfe.v (1.0 MSPS) is unchanged.
  */
 module sys_sw_dfe_1mhz #(
-    parameter integer CIC_BITS = 20,      // 18 saves multiplier area; 20 is default
+    parameter integer CIC_BITS = 20,      // 18 reduces some LUT/FF; both use 1 DSP/FIR lane on XC7
     parameter integer ADC_OFFSET_BINARY = 0,
     parameter COE_FILE = "common/fir_cic16_comp47_q15.hex"
 ) (

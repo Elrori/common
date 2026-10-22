@@ -2,8 +2,8 @@
  * Symmetric, time-multiplexed 47-tap FIR decimator by two.
  *
  * Two copies of a circular sample buffer give independent synchronous reads
- * of each symmetric pair.  Quartus can map these simple memories to block
- * RAM, instead of 47*W_DIN flip-flops and wide register-bank muxes.
+ * of each symmetric pair.  The arrays may map to FPGA distributed RAM
+ * (RAM64M in XC7 Yosys) instead of 47*W_DIN registers and wide muxes.
  * One signed multiplier is used per I/Q channel: 23 symmetric pairs and
  * the centre tap are processed in 24 MAC clocks, plus 2 pipeline clocks.
  * This fits the 32 clocks available per output at CIC decimation R=16.

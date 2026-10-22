@@ -34,7 +34,40 @@ Two 64-sample synchronous memory copies permit two reads and one write per chann
 | Parallel multiplier operators | 1 of 16x16 | 1 of **21x16** |
 | MAC cycles/output | ~31 | **24** (plus read/output pipeline) |
 
-For both I and Q, estimate **four small block-RAM banks** for FIR sample history if the target FPGA can pack 64x20 in one block per bank, and **two signed 21x16 multipliers** at RTL. Such multipliers *may* consume as many as four 18x18-class physical DSP blocks in total, depending on device family and mapping; the original 12x12 NCO mixer multipliers are unchanged. **These are mapping estimates, not verified Quartus ALM/DSP/M9K or fMAX numbers.** The 18-bit variant saves 10% sample RAM width and shortens adders; it may not save a DSP block because its symmetric preadder is still 19 bits wide. FPGA part number and a real place-and-route are necessary for a credible ALM count and timing sign-off.
+For both I and Q, there are **two signed 21x16 multipliers** at RTL. Each fits inside **one Artix-7 DSP48E1 (25x18 signed multiplication)**, so **both 18- and 20-bit variants use two FIR DSP48E1 slices in total**. On XC7A50T the small FIR history arrays map efficiently into **RAM64M distributed RAM**. An XC7-targeted cell-mapping run observed **28 RAM64M and no extra block RAM** across both new FIR lanes; the NCO ROM uses block RAM separately. The 18-bit option reduces distributed RAM width and a few logic resources but does not save a DSP48E1. See the FPGA-specific counts below.
+
+## Hardware target: Artix-7 XC7A50T-FGG484-1
+
+The selected part is **`xc7a50t-fgg484-1`**, as used in the hardware of [Elrori/k9plus-fm-radio](https://github.com/Elrori/k9plus-fm-radio). **Only its FPGA/board hardware is relevant**: its RF converter, DSP architecture, and FM processing are **not reused**. This DFE retains the external **12-bit, 40 MSPS direct-sampling ADC**. The existing K9+ board reference has a **25 MHz oscillator on W19** and does **not** document the required parallel ADC12 pinout; actual ADC data/clock pins, input standard, and sampling-clock synchronization must be specified before hardware implementation. If the ADC provides a source-synchronous 40 MHz clock, constrain that clock and the data arrival times. Do not substitute the 25 MHz board clock without accounting for the ADC clock-domain relationship.
+
+AMD [DS180](https://docs.amd.com/api/khub/documents/2LByHkO~nSZXcei2D55fTg/content) lists the following XC7A50T on-chip capacity: **32,600 LUT, 65,200 FF, 120 DSP48E1 and 150 RAMB18-equivalent blocks (75 RAMB36)**. XC7A50T-FGG484-1 is the speed-grade -1 package target. The open-source Yosys XC7 pass can map RTL to Xilinx primitives, but **it does not run Vivado placement, routing, setup/hold STA or speed-grade-specific timing analysis**.
+
+### FPGA resource comparison: complete, two-channel 12-bit ADC DFE
+
+The complete original and optimized tops were synthesized against the same Yosys 7-series technology library, with generated original NCO LUT data in both cases:
+
+| Mapping statistic | Original CIC16/FIR31 | New CIC18/FIR47 | New CIC20/FIR47 |
+| --- | ---: | ---: | ---: |
+| Estimated LUTs, including LUTRAM | **1,328** | **1,378** | **1,406** |
+| FF (all FD variants) | 1,942 | 1,844 | 1,856 |
+| DSP48E1 | **4** | **4** | **4** |
+| RAMB18E1 | **6** | **6** | **6** |
+| RAM64M / RAM32M | 0 / 6 | 24 / 0 | 28 / 0 |
+| CARRY4 | 296 | 312 | 314 |
+
+These totals include **both** I/Q chains, NCO, two 12x12 mixers, CICs, FIRs, and top-level input/output buffers. The **four DSP48E1** comprise **two mixer and two FIR** multipliers. The **six RAMB18E1** are for the existing sine/cosine NCO LUTs; FIR history does not require additional physical Block RAM in this mapping. A RAM64M/RAM32M consumes four LUT resources, hence `estimated LUT = LUT1..LUT6 count + 4*(RAM64M+RAM32M)`. Vivado may optimize resource sharing and LUTRAM packing differently; these are **technology-mapped estimates**, not post-implementation device utilization.
+
+**20-bit compared with 18-bit:** +28 estimated LUTs, +12 FF, **zero extra DSP/Block RAM**. Both are comfortably within this device's available resources; the 20-bit default gives slightly better simulated digital quantization margin (+0.14 dB in the fixed 12-bit ADC case) for negligible cost. Compared with the complete original top, CIC20/FIR47 costs **+78 estimated LUT**, uses **86 fewer FF**, and retains the same four DSP and six NCO ROM BRAM18 blocks. Estimated 20-bit utilization is **4.31% LUT, 2.85% FF, 3.33% DSP and 4.00% RAMB18** *for this DFE alone*. It does not include Ethernet, other DSP functions or a board-level shell.
+
+Isolated FIR cell mapping per lane: original FIR31 **~125 LUT, 170 FF, 1 DSP**; FIR47/18 **~169 LUT, 154 FF, 1 DSP**; FIR47/20 **~183 LUT, 160 FF, 1 DSP**. Thus, the extra filter taps chiefly cost small LUTRAM / address-control resources. A critical timing path **may** instead reside in the five cascaded **41-bit CIC integrator adders**, not the single time-multiplexed FIR DSP. **The 40 MHz clock (25 ns period) is a requirement, not a timing result.** A Vivado 2019.1+ design for the exact `xc7a50t-fgg484-1` must run `synth_design`, `place_design`, `route_design` and `report_timing_summary` with the real ADC interface constraints before any claim of timing closure.
+
+Reproduce **all six** XC7 reports and the machine-readable summary using Python 3/NumPy and Yosys (from the repository root):
+
+```sh
+python3 sim/dfe_1mhz_tb/run_xc7_synth.py
+```
+
+Outputs: `sim/dfe_1mhz_tb/results_xc7.json` (committed reference numbers) and ignored raw Yosys logs under `sim/dfe_1mhz_tb/.tmp/`. The script regenerates identical NCO ROM contents for both tops, then maps original/new full designs and all three isolated FIRs. The reference numbers are **Yosys architecture estimates; no Vivado installation or physical board run was available here**.
 
 ## Reproducible RTL tests
 
@@ -113,4 +146,4 @@ An ideal 12-bit ADC's *full-Nyquist* sine quantization-limited SNR is `6.02*12+1
 | [WiNRADiO WR-G33DDC](https://winradio.com/home/g33ddc.htm) | **16-bit 100 MSPS** direct-sampling ADC, **4 MHz** DDC bandwidth, vendor-claimed dynamic range **107 dB** | Different ADC resolution, analog preselectors, bandwidth and dynamic-range definition |
 | Azure/common optimized DFE (this patch) | **-96.79 dB calculated digital filter stopband**, ~**86.63 dB simulated injected-noise passband SNR** | No antenna/RF measurement, blocker desensitization test or ADC SFDR/ENOB characterization |
 
-In short: the optimized **digital CIC/FIR** approaches industry-style passband flatness and useful alias protection without changing the 12-bit ADC. It does **not** establish commercial-receiver system-level noise figure or 100+ dB blocking dynamic range. Next required hardware validations are: Quartus compile/fMAX and ALM/M9K/DSP occupancy for the exact FPGA, measured 12-bit ADC SNR/SFDR with realistic reference clock jitter, a two-tone blocking/intermodulation test across the HF band, and NCO spur evaluation after downconversion.
+In short: the optimized **digital CIC/FIR** approaches industry-style passband flatness and useful alias protection without changing the 12-bit ADC. It does **not** establish commercial-receiver system-level noise figure or 100+ dB blocking dynamic range. Next required hardware validations are: **Vivado post-route timing/resource reports for XC7A50T-FGG484-1**, measured 12-bit ADC SNR/SFDR with realistic reference clock jitter, a two-tone blocking/intermodulation test across the HF band, and NCO spur evaluation after downconversion.
