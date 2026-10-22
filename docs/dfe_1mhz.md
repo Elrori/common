@@ -42,8 +42,14 @@ Requirements: Python 3 + NumPy + SciPy, Icarus Verilog (`iverilog`, `vvp`). From
 
 ```sh
 python3 sim/dfe_1mhz_tb/run.py --full
-# or: make -C sim/dfe_1mhz_tb test
+python3 sim/dfe_1mhz_tb/run_adc12.py --full
+python3 sim/dfe_1mhz_tb/run_adc12.py --bits 18  # 18-bit quick end-to-end comparison
+# or: make -C sim/dfe_1mhz_tb test (runs both full suites)
 ```
+
+The second test runs the **entire original top-level and the entire optimized top-level**, both with the *same signed 12-bit ADC samples*, the original ROM-based NCO and the original 12x12-to-16-bit multiplier. NCO lookup tables are deterministically generated into the ignored `.tmp` test directory; they are not added as thousands of source lines to the repository. The ADC model quantizes analog test tones plus 0.4 LSB-RMS white voltage noise; the LO is 8 MHz, with NCO dithering enabled. Both outputs are measured as complex I/Q FFTs over the same 4.096 ms period. It also includes combinations of a wanted signal and much stronger 550/750 kHz offsets.
+
+**Full-chain bug exposed and corrected:** in the repository's original `dsp_mul2.v`, the reset branch assigned zero to `aout_b` twice, failing to initialize `bout_b`. In a four-state RTL simulation, `bout_b=X` entered one CIC integrator before its first valid multiplier cycle, making that entire I/Q branch permanently unknown. The branch includes the one-line correction `bout_b <= 0` and uses it in **both** old/new comparison chains. This fix addresses deterministic reset behavior; it does not represent a measured SNR improvement.
 
 The testbench feeds identical deterministic **16-bit post-mixer** samples into 3 actual RTL chains: original CIC16/FIR31, optimized CIC18/FIR47, optimized CIC20/FIR47. The external ADC remains **12-bit in both synthesizable top-level designs**, but the noise injection is *after* the unmodified mixer to isolate CIC/FIR losses. **Do not interpret these filtered-noise results as measured RF receiver SNR, ADC ENOB, or 12-bit ADC dynamic range.**
 
@@ -52,6 +58,7 @@ The testbench feeds identical deterministic **16-bit post-mixer** samples into 3
 - Coherent FFT/least-squares window: 4096 samples at 1.0 MSPS versus 5120 samples at 1.25 MSPS, both 4.096 ms. ROI is **+/-500 kHz**, full two-sided complex-output equivalent analysis for one real I/Q branch.
 - The script compares every FIR implementation against an independent floating-point direct FIR convolution of its **observed RTL CIC output**; all tested signals have output RMSE under 0.60 output LSB after pipeline phase alignment. Full-precision CIC outputs from the 18- and 20-bit variants are compared bit-for-bit.
 - `sim/dfe_1mhz_tb/results.json` contains machine-readable per-case SNR, tone RMS, phase alignment, attenuation and filter transfer function metrics.
+- `sim/dfe_1mhz_tb/results_adc12.json` contains the separately measured complete ADC12/NCO/mixer/IQ-chain results. Those tests are software-emulated 12-bit *digitization*, **not physical ADC or RF-front-end measurements**.
 
 ### Measured digital results
 
@@ -73,6 +80,26 @@ Frequency-response calculations use the exact committed integer coefficients and
 | Original at 600 kHz | **-24.18 dB** |
 
 **Guard-band caveat:** 550 kHz is still inside the new 625 kHz output Nyquist band, so it is a *transition-band* signal, not a 96 dB-rejected blocker. Software discards that portion of the spectrum; if hardware rejection at **550 kHz** is mandatory, the response specification or output rate/filter length must change. The -96.79 dB requirement starts at 750 kHz, where content would otherwise alias into the monitored central region. The whole cascade response is not a guarantee of suppression of arbitrary large blockers before the ADC or the mixer.
+
+### Complete 12-bit ADC + NCO + I/Q RTL results
+
+This additional test injects signed **12-bit quantized** ADC samples into the unmodified original and optimized system top modules, using the same 8 MHz NCO, NCO phase dithering and 12x12-to-16-bit multiplier, with the common one-line multiplier reset correction described earlier. An AWGN source of 0.4 ADC LSB RMS is applied **before** quantization. Every case uses 262,144 samples at 40 MSPS and the same 1 MHz analysis region. ADC clipping was **zero in all cases**.
+
+| 12-bit ADC test | Original chain, ROI SINAD | New chain, ROI SINAD | Improvement |
+| --- | ---: | ---: | ---: |
+| 237 kHz, AWGN seed 1, amplitude 1500 LSB | 70.71 dB | **77.92 dB** | +7.21 dB |
+| 237 kHz, AWGN seed 2 | 70.68 dB | **77.94 dB** | +7.26 dB |
+| 450 kHz band edge, amplitude 1500 LSB | 70.97 dB | **77.82 dB** | +6.85 dB |
+| 237 kHz wanted 350 LSB + 550 kHz blocker 1300 LSB | -1.82 dB | **66.59 dB** | +68.41 dB |
+| 237 kHz wanted 350 LSB + 750 kHz blocker 1300 LSB | 58.42 dB | **66.51 dB** | +8.09 dB |
+
+As an additional one-case check, selecting **18-bit CIC** at 237 kHz gives **77.78 dB** instead of the 20-bit default's **77.92 dB**, a 0.14 dB difference in this ADC12/NCO noise setup. The separate output file `results_adc12_18.json` records this comparison; the main `results_adc12.json` contains all five 20-bit cases.
+
+The particularly large **550 kHz** result is a bandwidth/aliasing effect: at the original **1 MSPS** output this nearby blocker aliases to about **450 kHz**, **inside** the monitored band. At the new **1.25 MSPS** output the 550 kHz tone remains in the 500–625 kHz guard region, which is excluded from the 1 MHz measurement. Its amplitude is **not** suppressed by 68 dB inside the raw 1.25 MSPS samples. The receiver application must discard the guard before interpreting a 1 MHz spectrum. Both chains also benefited equally from fixing the original multiplier reset bug; that bug fix is not counted as a gain.
+
+The 750 kHz dual-tone test confirms additional rejection of energy that would fold into the 1 MHz measurement. At the actual digitized noise level, NCO/ADC quantization effects limit end-to-end rejection; do **not** substitute the ideal coefficient-response number (-96.79 dB) for an experimentally observed whole-chain spur-free dynamic-range specification.
+
+For the 1500-LSB sine and 0.4-LSB additive voltage noise used above, the simplified white-noise benchmark after 12-bit quantization is `20 log10((1500/sqrt(2))/sqrt(0.4^2 + 1/12)) + 10 log10(20)`, approximately **79.66 dB for 1 MHz**. The optimized full-chain **77.9 dB** is therefore about 1.7 dB below that idealized figure. This difference includes NCO/mixer and digital implementation effects; it is **not** proof that FIR precision alone costs 1.7 dB, and the noise-whiteness assumption is only an approximation.
 
 ## What 12-bit ADC can and cannot achieve
 

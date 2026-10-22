@@ -1,0 +1,179 @@
+{
+  "fs_adc": 40000000,
+  "adc_bits": 12,
+  "lo_hz": 8000000,
+  "nco_phi_inc": 858993459,
+  "nco_dither": true,
+  "adc_model": "ideal rounding to signed 12-bit and Gaussian voltage noise",
+  "adc_noise_sigma_lsb": 0.4,
+  "limitations": "No analog RF front end, jitter, ENOB impairment, or real FPGA timing",
+  "cases": [
+    {
+      "name": "ADC12 237k AWGN",
+      "tones": [
+        [
+          237060.546875,
+          1500
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "old": {
+        "complex_tone_amplitudes": {
+          "237060.546875": 2518558.776525467
+        },
+        "strongest_tone_amplitude": 2518558.776525467,
+        "inband_sinad_db": 70.70604257633936,
+        "roi_rms": 2518558.883558499,
+        "sample_count": 6559
+      },
+      "new": {
+        "complex_tone_amplitudes": {
+          "237060.546875": 2576140.806580695
+        },
+        "strongest_tone_amplitude": 2576140.806580695,
+        "inband_sinad_db": 77.91548738332332,
+        "roi_rms": 2576140.8273963872,
+        "sample_count": 8176
+      },
+      "inband_sinad_improvement_db": 7.209444806983967
+    },
+    {
+      "name": "ADC12 237k seed2",
+      "tones": [
+        [
+          237060.546875,
+          1500
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 2,
+      "adc_clipped_samples": 0,
+      "old": {
+        "complex_tone_amplitudes": {
+          "237060.546875": 2518555.223566627
+        },
+        "strongest_tone_amplitude": 2518555.223566627,
+        "inband_sinad_db": 70.67777644006274,
+        "roi_rms": 2518555.3312984053,
+        "sample_count": 6559
+      },
+      "new": {
+        "complex_tone_amplitudes": {
+          "237060.546875": 2576136.3365664827
+        },
+        "strongest_tone_amplitude": 2576136.3365664827,
+        "inband_sinad_db": 77.93974397279544,
+        "roi_rms": 2576136.3572662016,
+        "sample_count": 8176
+      },
+      "inband_sinad_improvement_db": 7.261967532732697
+    },
+    {
+      "name": "ADC12 450k edge",
+      "tones": [
+        [
+          449951.171875,
+          1500
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "old": {
+        "complex_tone_amplitudes": {
+          "449951.171875": 2622148.176199013
+        },
+        "strongest_tone_amplitude": 2622148.176199013,
+        "inband_sinad_db": 70.97014609316679,
+        "roi_rms": 2622148.28105968,
+        "sample_count": 6559
+      },
+      "new": {
+        "complex_tone_amplitudes": {
+          "449951.171875": 2574220.271778946
+        },
+        "strongest_tone_amplitude": 2574220.271778946,
+        "inband_sinad_db": 77.82301829026456,
+        "roi_rms": 2574220.2930267416,
+        "sample_count": 8176
+      },
+      "inband_sinad_improvement_db": 6.852872197097767
+    },
+    {
+      "name": "550k strong blocker",
+      "tones": [
+        [
+          237060.546875,
+          350
+        ],
+        [
+          550048.828125,
+          1300
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "old": {
+        "complex_tone_amplitudes": {
+          "237060.546875": 587666.1872431156,
+          "550048.828125": 724745.5509384708
+        },
+        "strongest_tone_amplitude": 587666.1872431156,
+        "inband_sinad_db": -1.821101111925489,
+        "roi_rms": 933063.8494484472,
+        "sample_count": 6559
+      },
+      "new": {
+        "complex_tone_amplitudes": {
+          "237060.546875": 601100.4234686901,
+          "550048.828125": 1960566.775960207
+        },
+        "strongest_tone_amplitude": 601100.4234686901,
+        "inband_sinad_db": 66.58583321775991,
+        "roi_rms": 601100.4894367472,
+        "sample_count": 8176
+      },
+      "inband_sinad_improvement_db": 68.4069343296854
+    },
+    {
+      "name": "750k strong blocker",
+      "tones": [
+        [
+          237060.546875,
+          350
+        ],
+        [
+          750000.0,
+          1300
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "old": {
+        "complex_tone_amplitudes": {
+          "237060.546875": 587660.6389681795,
+          "750000.0": 136.72706073809488
+        },
+        "strongest_tone_amplitude": 587660.6389681795,
+        "inband_sinad_db": 58.42184992107995,
+        "roi_rms": 587661.0615506318,
+        "sample_count": 6559
+      },
+      "new": {
+        "complex_tone_amplitudes": {
+          "237060.546875": 601099.5064717534,
+          "750000.0": 29.92577075712344
+        },
+        "strongest_tone_amplitude": 601099.5064717534,
+        "inband_sinad_db": 66.51053469440372,
+        "roi_rms": 601099.5735934433,
+        "sample_count": 8176
+      },
+      "inband_sinad_improvement_db": 8.08868477332377
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "fs_adc": 40000000,
+  "adc_bits": 12,
+  "cic_bits": 18,
+  "lo_hz": 8000000,
+  "nco_phi_inc": 858993459,
+  "nco_dither": true,
+  "adc_model": "ideal rounding to signed 12-bit and Gaussian voltage noise",
+  "adc_noise_sigma_lsb": 0.4,
+  "limitations": "No analog RF front end, jitter, ENOB impairment, or real FPGA timing",
+  "cases": [
+    {
+      "name": "ADC12 237k AWGN",
+      "tones": [
+        [
+          237060.546875,
+          1500
+        ]
+      ],
+      "sigma": 0.4,
+      "seed": 1,
+      "adc_clipped_samples": 0,
+      "old": {
+        "complex_tone_amplitudes": {
+          "237060.546875": 2518558.776525467
+        },
+        "strongest_tone_amplitude": 2518558.776525467,
+        "inband_sinad_db": 70.70604257633936,
+        "roi_rms": 2518558.883558499,
+        "sample_count": 6559
+      },
+      "new": {
+        "complex_tone_amplitudes": {
+          "237060.546875": 2576141.1063666157
+        },
+        "strongest_tone_amplitude": 2576141.1063666157,
+        "inband_sinad_db": 77.78144419593201,
+        "roi_rms": 2576141.127834796,
+        "sample_count": 8176
+      },
+      "inband_sinad_improvement_db": 7.075401619592654
+    }
+  ]
+}

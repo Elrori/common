@@ -29,7 +29,7 @@ assign  bout         = {bout_b[M_W-1], bout_b[M_W-1:M_W-(O_W-1)-1]} + carry_bit1
 always@(posedge clk or negedge rst_n)begin
     if (!rst_n) begin
         aout_b  <=  {(M_W){1'd0}};
-        aout_b  <=  {(M_W){1'd0}};
+        bout_b  <=  {(M_W){1'd0}};
     end else begin
         aout_b  <=  ain * din;
         bout_b  <=  bin * din;
