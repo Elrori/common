@@ -1,0 +1,20 @@
+; Explicit undecorated names for 32-bit HDSDR GetProcAddress.
+LIBRARY ExtIO_SWRadio
+EXPORTS
+    InitHW=_InitHW@12
+    OpenHW=_OpenHW@0
+    StartHW=_StartHW@4
+    StopHW=_StopHW@0
+    CloseHW=_CloseHW@0
+    SetHWLO=_SetHWLO@4
+    GetHWLO=_GetHWLO@0
+    GetHWSR=_GetHWSR@0
+    GetTune=_GetTune@0
+    GetStatus=_GetStatus@0
+    TuneChanged=_TuneChanged@4
+    GetFilters=_GetFilters@12
+    SetCallback=_SetCallback@4
+    ExtIoGetSrates=_ExtIoGetSrates@8
+    ExtIoGetActualSrateIdx=_ExtIoGetActualSrateIdx@0
+    ExtIoSetSrate=_ExtIoSetSrate@4
+    ExtIoGetBandwidth=_ExtIoGetBandwidth@4

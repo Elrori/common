@@ -1,0 +1,14 @@
+build/
+.rtl-test.*/
+__pycache__/
+*.pyc
+*.vvp
+*.vcd
+*.jou
+*.log
+.vs/
+Debug/
+Release/
+ExtIO/Debug/
+ExtIO/Release/
+ExtIO/x86/
