@@ -40,14 +40,14 @@ read_verilog -sv [list \
     [file join $rtl sw_rgmii_tx.sv] \
     [file join $rtl sw_radio_top.sv]]
 read_xdc [file join $project constraints k9plus_phy0.xdc]
-read_xdc [file join $project constraints adc_ad8370_PROVISIONAL.xdc]
+read_xdc [file join $project constraints adc_ad8370_k9plus_ext.xdc]
 
 synth_design -top sw_radio_top -part $part -flatten_hierarchy rebuilt
 write_checkpoint -force [file join $out post_synth.dcp]
 report_utilization -hierarchical -file [file join $out utilization_synth.rpt]
 report_timing_summary -file [file join $out timing_synth.rpt]
 if {[lsearch -exact $argv "-synth-only"] >= 0} {
-    puts "SW_RADIO_SYNTH_ONLY_PASS (ADC constraints are NOT board verified)"
+    puts "SW_RADIO_SYNTH_ONLY_PASS"
     exit
 }
 opt_design
@@ -58,7 +58,13 @@ report_drc -file [file join $out drc_route.rpt]
 report_route_status -file [file join $out route_status.rpt]
 report_utilization -hierarchical -file [file join $out utilization_route.rpt]
 report_timing_summary -max_paths 20 -file [file join $out timing_route.rpt]
+set failing_paths [get_timing_paths -quiet -slack_lesser_than 0 -max_paths 1]
+if {[llength $failing_paths] != 0} {
+    set worst_path [lindex $failing_paths 0]
+    error [format "Post-route timing failed: worst slack %.3f ns" \
+        [get_property SLACK $worst_path]]
+}
 write_checkpoint -force [file join $out routed.dcp]
-write_bitstream -force [file join $out sw_radio_UNSAFE_PROVISIONAL_PINS.bit]
-puts "SW_RADIO_BUILD_PASS: *UNSAFE* BITSTREAM -- NEVER FLASH WITHOUT PIN REVIEW"
+write_bitstream -force [file join $out sw_radio_k9plus_ext.bit]
+puts "SW_RADIO_BUILD_PASS"
 exit

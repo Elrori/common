@@ -5,6 +5,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
+#include <commctrl.h>
 #include <atomic>
 #include <cstdint>
 #include <cmath>
@@ -15,19 +16,30 @@
 #include <cstdlib>
 
 #pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "Comctl32.lib")
 using ExtCallback = void (*)(int, int, float, void *);
 namespace {
 constexpr int kPortRx = 50003, kPortControl = 50001;
 constexpr int kSamplesPacket = 256, kCallbackSamples = 512;
 constexpr long kSampleRate = 1250000;
 constexpr double kAdcHz = 40000000.0;
+constexpr wchar_t kGainWindowClass[] = L"SWRadioAD8370GainWindow";
+constexpr UINT kMsgOtrChanged = WM_APP + 1;
+constexpr int kSliderId = 1001, kLowId = 1002, kDefaultId = 1003, kHighId = 1004;
 std::atomic<ExtCallback> callback{nullptr};
 std::atomic<bool> running{false};
 std::atomic<long> center_hz{7100000};
+std::atomic<int> gain_code{0x40};
+std::atomic<bool> adc_overrange{false};
 SOCKET rx = INVALID_SOCKET, control = INVALID_SOCKET;
 sockaddr_in control_addr{};
 bool wsa_active = false;
 std::thread worker;
+HINSTANCE dll_instance = nullptr;
+HWND gain_window = nullptr, gain_slider = nullptr;
+HWND gain_value_text = nullptr, gain_status_text = nullptr, otr_status_text = nullptr;
+
+void close_network();
 
 uint32_t get32(const unsigned char* b) {
     return static_cast<uint32_t>(b[0]) |
@@ -48,6 +60,118 @@ void send_tune(long hz) {
     put32(data+8,fcw);
     sendto(control,reinterpret_cast<const char*>(data),sizeof(data),0,
            reinterpret_cast<const sockaddr*>(&control_addr),sizeof(control_addr));
+}
+bool send_gain(int code) {
+    if (control == INVALID_SOCKET || code < 0 || code > 255) return false;
+    const unsigned char data[5] = {'K','9','A','G',static_cast<unsigned char>(code)};
+    return sendto(control,reinterpret_cast<const char*>(data),sizeof(data),0,
+        reinterpret_cast<const sockaddr*>(&control_addr),sizeof(control_addr)) == sizeof(data);
+}
+void set_control_font(HWND control_window) {
+    SendMessageW(control_window,WM_SETFONT,
+        reinterpret_cast<WPARAM>(GetStockObject(DEFAULT_GUI_FONT)),TRUE);
+}
+void update_gain_text() {
+    if (!gain_value_text) return;
+    wchar_t text[80]{};
+    swprintf_s(text,L"AD8370 gain code: 0x%02X  (%d / 255)",
+        gain_code.load(),gain_code.load());
+    SetWindowTextW(gain_value_text,text);
+}
+void update_otr_text() {
+    if (!otr_status_text) return;
+    SetWindowTextW(otr_status_text,adc_overrange.load()
+        ? L"ADC OTR: OVERLOAD - reduce gain and reprogram/reset FPGA to clear"
+        : L"ADC OTR: OK");
+}
+void apply_gain(int code) {
+    if (code < 0) code = 0;
+    if (code > 255) code = 255;
+    gain_code.store(code);
+    if (gain_slider) SendMessageW(gain_slider,TBM_SETPOS,TRUE,code);
+    update_gain_text();
+    if (gain_status_text) SetWindowTextW(gain_status_text,
+        send_gain(code) ? L"Applied to FPGA" : L"Stored; receiver is not open");
+}
+LRESULT CALLBACK gain_window_proc(HWND window,UINT message,WPARAM wparam,LPARAM lparam) {
+    switch (message) {
+    case WM_HSCROLL:
+        if (reinterpret_cast<HWND>(lparam) == gain_slider) {
+            const int code = static_cast<int>(SendMessageW(gain_slider,TBM_GETPOS,0,0));
+            gain_code.store(code);
+            update_gain_text();
+            const int action = LOWORD(wparam);
+            // Track continuously for responsive tuning, and always transmit
+            // the final position so SPI-command coalescing cannot lose it.
+            if (action == TB_THUMBTRACK || action == TB_ENDTRACK ||
+                action == TB_THUMBPOSITION || action == TB_LINEUP ||
+                action == TB_LINEDOWN || action == TB_PAGEUP || action == TB_PAGEDOWN) {
+                if (gain_status_text) SetWindowTextW(gain_status_text,
+                    send_gain(code) ? L"Applied to FPGA" : L"Stored; receiver is not open");
+            }
+        }
+        return 0;
+    case WM_COMMAND:
+        switch (LOWORD(wparam)) {
+        case kLowId: apply_gain(0x20); return 0;
+        case kDefaultId: apply_gain(0x40); return 0;
+        case kHighId: apply_gain(0x60); return 0;
+        }
+        break;
+    case kMsgOtrChanged:
+        update_otr_text();
+        return 0;
+    case WM_CLOSE:
+        ShowWindow(window,SW_HIDE);
+        return 0;
+    case WM_NCDESTROY:
+        gain_window = nullptr; gain_slider = nullptr;
+        gain_value_text = nullptr; gain_status_text = nullptr; otr_status_text = nullptr;
+        return DefWindowProcW(window,message,wparam,lparam);
+    }
+    return DefWindowProcW(window,message,wparam,lparam);
+}
+bool create_gain_window() {
+    if (gain_window) return true;
+    INITCOMMONCONTROLSEX controls{sizeof(controls),ICC_BAR_CLASSES};
+    InitCommonControlsEx(&controls);
+    WNDCLASSEXW wc{};
+    wc.cbSize = sizeof(wc);
+    wc.lpfnWndProc = gain_window_proc;
+    wc.hInstance = dll_instance;
+    wc.hCursor = LoadCursorW(nullptr,IDC_ARROW);
+    wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_BTNFACE+1);
+    wc.lpszClassName = kGainWindowClass;
+    RegisterClassExW(&wc);
+    gain_window = CreateWindowExW(WS_EX_TOOLWINDOW,kGainWindowClass,
+        L"SW-Radio / AD8370 Gain",WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU,
+        CW_USEDEFAULT,CW_USEDEFAULT,470,240,GetForegroundWindow(),nullptr,dll_instance,nullptr);
+    if (!gain_window) return false;
+    auto make_control = [](LPCWSTR kind,LPCWSTR text,DWORD style,
+                           int x,int y,int width,int height,int id) {
+        HWND child=CreateWindowExW(0,kind,text,WS_CHILD|WS_VISIBLE|style,
+            x,y,width,height,gain_window,reinterpret_cast<HMENU>(static_cast<INT_PTR>(id)),
+            dll_instance,nullptr);
+        if (child) set_control_font(child);
+        return child;
+    };
+    gain_value_text=make_control(L"STATIC",L"",0,18,16,420,22,0);
+    gain_slider=make_control(TRACKBAR_CLASSW,L"",TBS_AUTOTICKS|TBS_HORZ,
+        16,42,425,45,kSliderId);
+    SendMessageW(gain_slider,TBM_SETRANGE,TRUE,MAKELPARAM(0,255));
+    SendMessageW(gain_slider,TBM_SETTICFREQ,16,0);
+    SendMessageW(gain_slider,TBM_SETPAGESIZE,0,16);
+    SendMessageW(gain_slider,TBM_SETPOS,TRUE,gain_code.load());
+    make_control(L"BUTTON",L"Low 0x20",BS_PUSHBUTTON,18,94,125,30,kLowId);
+    make_control(L"BUTTON",L"Default 0x40",BS_PUSHBUTTON,166,94,125,30,kDefaultId);
+    make_control(L"BUTTON",L"High 0x60",BS_PUSHBUTTON,314,94,125,30,kHighId);
+    gain_status_text=make_control(L"STATIC",L"",0,18,137,420,22,0);
+    otr_status_text=make_control(L"STATIC",L"",0,18,164,430,42,0);
+    update_gain_text();
+    update_otr_text();
+    SetWindowTextW(gain_status_text,control == INVALID_SOCKET
+        ? L"Stored; receiver is not open" : L"Receiver open; move slider to apply");
+    return true;
 }
 void capture() {
     std::array<int16_t, kCallbackSamples*2> out{};
@@ -73,6 +197,10 @@ void capture() {
             datagram[4]!=3 || (datagram[5]&4)==0 ||
             datagram[6]!=32 || datagram[7]!=0 ||
             get32(datagram.data()+16)!=kSampleRate) continue;
+
+        const bool new_overrange=(datagram[5]&2)!=0;
+        if (new_overrange != adc_overrange.exchange(new_overrange) && gain_window)
+            PostMessageW(gain_window,kMsgOtrChanged,0,0);
 
         const auto* p=datagram.data();
         uint64_t first=0;
@@ -103,13 +231,18 @@ void capture() {
         }
     }
 }
+void close_network() {
+    if(rx!=INVALID_SOCKET) { closesocket(rx); rx=INVALID_SOCKET; }
+    if(control!=INVALID_SOCKET) { closesocket(control); control=INVALID_SOCKET; }
+    if(wsa_active) { WSACleanup(); wsa_active=false; }
+}
 } // namespace
 
 extern "C" {
 __declspec(dllexport) bool __stdcall InitHW(char* name,char* model,int& type) {
     // ExtIO host provides 16-byte arrays (incl terminator).
-    std::strncpy(name,"SW-Radio",15); name[15]=0;
-    std::strncpy(model,"K9+ AD9235",15); model[15]=0;
+    strncpy_s(name,16,"SW-Radio",_TRUNCATE);
+    strncpy_s(model,16,"K9+ AD9226",_TRUNCATE);
     type=3; // exthwUSBdata16
     return true;
 }
@@ -120,7 +253,10 @@ __declspec(dllexport) bool __stdcall OpenHW() {
     wsa_active=true;
     rx=socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
     control=socket(AF_INET,SOCK_DGRAM,IPPROTO_UDP);
-    if (rx==INVALID_SOCKET || control==INVALID_SOCKET) return false;
+    if (rx==INVALID_SOCKET || control==INVALID_SOCKET) {
+        close_network();
+        return false;
+    }
     BOOL reuse=TRUE, broadcast=TRUE;
     setsockopt(rx,SOL_SOCKET,SO_REUSEADDR,reinterpret_cast<const char*>(&reuse),sizeof(reuse));
     setsockopt(control,SOL_SOCKET,SO_BROADCAST,reinterpret_cast<const char*>(&broadcast),sizeof(broadcast));
@@ -130,12 +266,23 @@ __declspec(dllexport) bool __stdcall OpenHW() {
     listen.sin_family=AF_INET;
     listen.sin_addr.s_addr=htonl(INADDR_ANY);
     listen.sin_port=htons(kPortRx);
-    if (bind(rx,reinterpret_cast<const sockaddr*>(&listen),sizeof(listen))!=0) return false;
+    if (bind(rx,reinterpret_cast<const sockaddr*>(&listen),sizeof(listen))!=0) {
+        close_network();
+        return false;
+    }
     control_addr.sin_family=AF_INET;
     control_addr.sin_port=htons(kPortControl);
-    const char* target=std::getenv("SW_RADIO_CONTROL_HOST");
-    if(!target || !*target) target="192.168.10.255";
-    if(inet_pton(AF_INET,target,&control_addr.sin_addr)!=1) return false;
+    char* target_env=nullptr;
+    size_t target_len=0;
+    _dupenv_s(&target_env,&target_len,"SW_RADIO_CONTROL_HOST");
+    const char* target=(target_env && *target_env) ? target_env : "192.168.10.255";
+    const int target_ok=inet_pton(AF_INET,target,&control_addr.sin_addr);
+    std::free(target_env);
+    if(target_ok!=1) {
+        close_network();
+        return false;
+    }
+    send_gain(gain_code.load());
     return true;
 }
 __declspec(dllexport) int __stdcall StartHW(long hz) {
@@ -152,9 +299,7 @@ __declspec(dllexport) void __stdcall StopHW() {
 }
 __declspec(dllexport) void __stdcall CloseHW() {
     StopHW();
-    if(rx!=INVALID_SOCKET) { closesocket(rx); rx=INVALID_SOCKET; }
-    if(control!=INVALID_SOCKET) { closesocket(control); control=INVALID_SOCKET; }
-    if(wsa_active) { WSACleanup(); wsa_active=false; }
+    close_network();
 }
 __declspec(dllexport) int __stdcall SetHWLO(long hz) {
     if(hz<0 || hz>30000000) return 1;
@@ -181,6 +326,24 @@ __declspec(dllexport) int __stdcall ExtIoGetSrates(int idx,double* out) {
 __declspec(dllexport) int __stdcall ExtIoGetActualSrateIdx() {return 0;}
 __declspec(dllexport) int __stdcall ExtIoSetSrate(int idx) {return idx==0?0:1;}
 __declspec(dllexport) long __stdcall ExtIoGetBandwidth(int idx) {return idx==0?1000000:0;}
+__declspec(dllexport) void __stdcall ShowGUI() {
+    if (!create_gain_window()) return;
+    ShowWindow(gain_window,SW_SHOWNORMAL);
+    SetForegroundWindow(gain_window);
+}
+__declspec(dllexport) void __stdcall HideGUI() {
+    if (gain_window) ShowWindow(gain_window,SW_HIDE);
+}
+__declspec(dllexport) void __stdcall SwitchGUI() {
+    if (!gain_window || !IsWindowVisible(gain_window)) ShowGUI();
+    else HideGUI();
+}
 } // extern C
 
-BOOL WINAPI DllMain(HINSTANCE,DWORD,LPVOID) {return TRUE;}
+BOOL WINAPI DllMain(HINSTANCE instance,DWORD reason,LPVOID) {
+    if (reason==DLL_PROCESS_ATTACH) {
+        dll_instance=instance;
+        DisableThreadLibraryCalls(instance);
+    }
+    return TRUE;
+}

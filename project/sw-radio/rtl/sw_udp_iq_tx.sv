@@ -5,6 +5,7 @@ module sw_udp_iq_tx (
     input  wire clk, input wire rst,
     input  wire [31:0] tuned_hz,
     input  wire [31:0] dropped_samples,
+    input  wire adc_overrange,
     input  wire [31:0] fifo_word,
     input  wire fifo_empty,
     input  wire [11:0] fifo_count,
@@ -22,6 +23,7 @@ module sw_udp_iq_tx (
     reg [10:0] idx;
     reg sending;
     reg [31:0] tune_latched, dropped_latched;
+    reg overrange_latched;
     reg [63:0] sample_index, index_latched;
     reg [31:0] sequence_latched;
     wire [10:0] payload_index=idx-11'd42;
@@ -82,7 +84,11 @@ module sw_udp_iq_tx (
                 0:axis_data=8'h4b; 1:axis_data=8'h39;
                 2:axis_data=8'h49; 3:axis_data=8'h51; // "K9IQ"
                 4:axis_data=8'h03; // protocol v3; incompatible with v2 I8/Q8
-                5:axis_data=8'h04 | ((dropped_latched!=0)?8'h01:8'h00);
+                // bit0 FIFO overflow, bit1 ADC OTR seen since reset,
+                // bit2 signed interleaved I16/Q16 payload.
+                5:axis_data=8'h04 |
+                    ((dropped_latched!=0)?8'h01:8'h00) |
+                    (overrange_latched?8'h02:8'h00);
                 6:axis_data=8'h20; 7:axis_data=0;
                 8:axis_data=sequence_latched[7:0];
                 9:axis_data=sequence_latched[15:8];
@@ -123,13 +129,15 @@ module sw_udp_iq_tx (
         if (rst) begin
             idx<=0; sending<=0; packet_count<=0;
             sequence_latched<=0; tune_latched<=0;
-            dropped_latched<=0; sample_index<=0; index_latched<=0;
+            dropped_latched<=0; overrange_latched<=0;
+            sample_index<=0; index_latched<=0;
         end else begin
             if (!sending && fifo_count>=IQ_WORDS) begin
                 sending<=1; idx<=0;
                 sequence_latched<=packet_count;
                 tune_latched<=tuned_hz;
                 dropped_latched<=dropped_samples;
+                overrange_latched<=adc_overrange;
                 index_latched<=sample_index;
                 packet_count<=packet_count+1'b1;
             end else if (sending && axis_ready) begin

@@ -1,9 +1,9 @@
-// K9+/XI050CD Artix-7 xc7a50t-fgg484-1, AD9235/AD9226 parallel ADC.
-// ALL ADC AND AD8370 PACKAGE PINS ARE PROVISIONAL: DO NOT FLASH UNREVIEWED.
+// K9+/XI050CD Artix-7 xc7a50t-fgg484-1, AD9226 parallel ADC.
 module sw_radio_top (
     input  wire        clk_25m,
     output wire        adc_clk_out,
     input  wire [11:0] adc_data,
+    input  wire        adc_otr,
     output wire        ad8370_sclk,
     output wire        ad8370_mosi,
     output wire        ad8370_latch,
@@ -21,15 +21,34 @@ module sw_radio_top (
     sw_clock_gen clocks(.clk25(clk_25m),.clk40(adc_clk),
         .clk200(ref_clk),.locked(clocks_locked));
     wire adc_rst=~clocks_locked;
-    // Forward source-synchronous sample clock. Replace I/O timing constraints
-    // after the actual ADC module clock/data routing and delay are measured.
+    // This K9+ mezzanine has been verified with the forwarded clock in phase
+    // with the internal capture clock.  The IOB then captures the preceding
+    // AD9226 sample before the converter's next clock-to-data transition.
     ODDR #(.DDR_CLK_EDGE("SAME_EDGE"),.SRTYPE("SYNC")) clk_to_adc (
         .C(adc_clk),.CE(1'b1),.D1(1'b1),.D2(1'b0),
         .Q(adc_clk_out),.R(1'b0),.S(1'b0)
     );
-    // AD9235/AD9226 default is offset binary; invert MSB to signed 2's comp.
-    // Change this mapping if ADC output format pin/driver is set to 2's comp.
-    wire [11:0] adc_twos={~adc_data[11],adc_data[10:0]};
+    // This exact ADC mezzanine was proven by the EBAZ4205 design with its raw
+    // 12-bit bus fed directly to signed DSP.  Its format strap is therefore
+    // two's complement; flipping bit 11 here would create a half-scale
+    // discontinuity at every zero crossing and destroy weak RF signals.
+    // Keep the first capture register in the I/O cells.  At 40 MSPS this also
+    // isolates the external bus from the DFE's wider routing fanout.
+    (* IOB="TRUE" *) reg [11:0] adc_data_iob;
+    (* IOB="TRUE" *) reg adc_otr_iob;
+    always @(posedge adc_clk) begin
+        adc_data_iob <= adc_data;
+        adc_otr_iob <= adc_otr;
+    end
+    wire [11:0] adc_signed=adc_data_iob;
+
+    // OTR is made sticky until reconfiguration so a short overload is not
+    // hidden by UDP packet timing.  Synchronize the level into the PHY clock.
+    reg adc_overrange_sticky;
+    always @(posedge adc_clk) begin
+        if (adc_rst) adc_overrange_sticky <= 1'b0;
+        else if (adc_otr_iob) adc_overrange_sticky <= 1'b1;
+    end
 
     wire eth_clk;
     // Asynchronous PHY clock deassertion synchronizer.
@@ -39,6 +58,11 @@ module sw_radio_top (
         else eth_reset_pipe<={eth_reset_pipe[1:0],1'b0};
     end
     wire eth_rst=eth_reset_pipe[2];
+    (* ASYNC_REG="TRUE" *) reg [1:0] overrange_sync;
+    always @(posedge eth_rx_clk) begin
+        if (eth_rst) overrange_sync <= 2'b00;
+        else overrange_sync <= {overrange_sync[0],adc_overrange_sticky};
+    end
     wire [31:0] tune_eth, fcw_eth;
     wire [7:0] gain_eth;
     wire tune_pulse_eth, gain_pulse_eth;
@@ -71,7 +95,7 @@ module sw_radio_top (
     wire i_valid,q_valid;
     sys_sw_dfe_1mhz_nco14 dfe (
         .clk_adc(adc_clk),.rst_n(clocks_locked),
-        .adc_dat(adc_twos),.phi_inc(fcw_adc),
+        .adc_dat(adc_signed),.phi_inc(fcw_adc),
         .sin_fir(i_fir),.cos_fir(q_fir),
         .sin_fir_vld(i_valid),.cos_fir_vld(q_valid)
     );
@@ -79,7 +103,10 @@ module sw_radio_top (
     wire [31:0] iq_word, dropped_samples;
     wire [11:0] fifo_words;
     wire fifo_empty, fifo_pop;
-    sw_iq_cdc #(.SHIFT(9)) iq_cdc (
+    // Correct two's-complement ADC data is about 30 dB below the previously
+    // mis-decoded stream. SHIFT=5 uses the 16-bit transport range while the
+    // measured 0x40 gain setting retains ample peak headroom.
+    sw_iq_cdc #(.SHIFT(5)) iq_cdc (
         .wr_clk(adc_clk),.wr_rst(adc_rst),
         .sample_valid(i_valid && q_valid),
         .i_fir(i_fir),.q_fir(q_fir),
@@ -93,6 +120,7 @@ module sw_radio_top (
     sw_udp_iq_tx pkt (
         .clk(eth_clk),.rst(eth_rst),
         .tuned_hz(tune_eth),.dropped_samples(dropped_samples),
+        .adc_overrange(overrange_sync[1]),
         .fifo_word(iq_word),.fifo_empty(fifo_empty),
         .fifo_count(fifo_words),.fifo_rd_en(fifo_pop),
         .axis_data(payload_byte),.axis_valid(payload_valid),
@@ -121,8 +149,11 @@ module sw_radio_top (
     assign eth_mdc=1'b0;
     assign eth_mdio=1'bz;
 
-    // User-supplied AD8370 SPI module. On boot program minimum gain (0x00).
+    // 0x40 leaves generous headroom on the connected bench setup. Live
+    // antenna tests found 0xa0 clean, 0xc0 marginal and 0xe0 overrange; the
+    // exact boundary remains input/environment dependent.
     // Subsequent control datagrams K9AG/gain may update the VGA while online.
+    localparam [7:0] AD8370_BOOT_GAIN=8'h40;
     reg [11:0] boot_count;
     reg boot_written, spi_busy;
     reg spi_strobe;
@@ -131,14 +162,14 @@ module sw_radio_top (
     always @(posedge adc_clk) begin
         if (adc_rst) begin
             boot_count<=0; boot_written<=0; spi_busy<=0;
-            spi_strobe<=0; spi_gain<=0;
+            spi_strobe<=0; spi_gain<=AD8370_BOOT_GAIN;
         end else begin
             spi_strobe<=0;
             if (!boot_written) begin
                 boot_count<=boot_count+1'b1;
                 if (&boot_count && !spi_busy) begin
                     spi_strobe<=1;
-                    spi_gain<=0;
+                    spi_gain<=AD8370_BOOT_GAIN;
                     boot_written<=1;
                     spi_busy<=1;
                 end

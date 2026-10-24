@@ -7,4 +7,4 @@ if [[ "${1:-}" == "--synth-only" ]]; then
 else
   vivado -mode batch -source "$this_dir/scripts/build.tcl"
 fi
-echo 'WARNING: PROVISIONAL ADC/AD8370 PINS. DO NOT FLASH BITSTREAM.'
+echo 'Built for the k9plus_ext ADC/AD8370 pin map in constraints/adc_ad8370_k9plus_ext.xdc.'

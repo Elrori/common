@@ -15,7 +15,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemDefinitionGroup>
     <ClCompile><WarningLevel>Level4</WarningLevel><SDLCheck>true</SDLCheck><LanguageStandard>stdcpp17</LanguageStandard><PreprocessorDefinitions>WIN32;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions></ClCompile>
-    <Link><ModuleDefinitionFile>ExtIO_SWRadio.def</ModuleDefinitionFile><AdditionalDependencies>Ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies></Link>
+    <Link><ModuleDefinitionFile>ExtIO_SWRadio.def</ModuleDefinitionFile><AdditionalDependencies>Ws2_32.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies></Link>
   </ItemDefinitionGroup>
   <ItemGroup><ClCompile Include="ExtIO_SWRadio.cpp" /></ItemGroup>
   <ItemGroup><None Include="ExtIO_SWRadio.def" /></ItemGroup>

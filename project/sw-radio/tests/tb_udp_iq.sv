@@ -13,7 +13,7 @@ module tb_udp_iq;
     reg [7:0] first_frame [0:1097];
     sw_udp_iq_tx dut (
         .clk(clk),.rst(rst),.tuned_hz(32'd7100000),
-        .dropped_samples(32'd2),.fifo_word(fifo_word),
+        .dropped_samples(32'd2),.adc_overrange(1'b1),.fifo_word(fifo_word),
         .fifo_empty(1'b0),.fifo_count(fifo_count),
         .fifo_rd_en(fifo_rd_en),.axis_data(axis_data),
         .axis_valid(axis_valid),.axis_ready(axis_ready),

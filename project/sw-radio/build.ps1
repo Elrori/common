@@ -1,6 +1,6 @@
 # One-click build from Windows PowerShell with Vivado on PATH.
-# .\build.ps1                   complete bitstream build (NOT for hardware)
-# .\build.ps1 -SynthOnly        synth / utilization / timing only (recommended)
+# .\build.ps1                   complete k9plus_ext bitstream build
+# .\build.ps1 -SynthOnly        synth / utilization / timing only
 param([switch]$SynthOnly)
 $ErrorActionPreference = 'Stop'
 $vivado = (Get-Command vivado.bat -ErrorAction SilentlyContinue)
@@ -12,4 +12,3 @@ if ($SynthOnly) { $arguments += @('-tclargs','-synth-only') }
 & $vivado.Source @arguments
 if ($LASTEXITCODE -ne 0) { throw "Vivado build failed with exit code $LASTEXITCODE" }
 Write-Host 'See project/sw-radio/build/ for utilization, timing and DRC reports.'
-Write-Warning 'Provisional ADC/AD8370 LOCs: bitstream must NOT be programmed onto board.'

@@ -45,7 +45,8 @@ def parse_iq(payload: bytes) -> dict:
     if samplerate != SAMPLE_RATE:
         raise ValueError(f"incorrect sample rate {samplerate}")
     return dict(seq=sequence, tuned_hz=tune, sample_index=sample_index,
-                dropped_samples=drops, data=payload[32:])
+                dropped_samples=drops, adc_overrange=bool(payload[5] & 2),
+                data=payload[32:])
 
 
 def transmit(payload: bytes, target: str) -> None:
@@ -80,7 +81,8 @@ def receive(packets: int, output: Path | None, bind: str) -> None:
                     sink.write(pkt["data"])
                 if i % 100 == 0:
                     print(f"#{i} seq={pkt['seq']} tune={pkt['tuned_hz']}Hz "
-                          f"sample={pkt['sample_index']} dropped={prev_drops}")
+                          f"sample={pkt['sample_index']} dropped={prev_drops} "
+                          f"adc_overrange={pkt['adc_overrange']}")
     finally:
         if sink:
             sink.close()

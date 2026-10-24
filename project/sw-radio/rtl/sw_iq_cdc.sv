@@ -1,5 +1,5 @@
 // Transfer *whole complex samples* atomically. Never drop half an I/Q word.
-// The FIR output is ~25 effective signed bits; >>>9 targets signed 16-bit IQ.
+// SHIFT is selected by top-level bench calibration to target signed 16-bit IQ.
 module sw_iq_cdc #(
     parameter integer SHIFT=9,
     parameter integer FIFO_DEPTH=2048

@@ -1,7 +1,16 @@
 work
 *.log
+*.jou
 *.vcd
 *.vvp
 *.exe
 *.swp
 a.out
+.Xil/
+project/sw-radio/build/
+project/sw-radio/ExtIO/ExtIO_SWRadio/
+project/sw-radio/ExtIO/Release/
+project/sw-radio/tests/ExtIOSmoke/
+project/sw-radio/tests/Release/
+usage_statistics_webtalk.html
+usage_statistics_webtalk.xml
