@@ -17,7 +17,7 @@ iverilog -g2012 -s tb_spi8370 -o "$tmp/tb_spi8370.vvp" \
     "$sw/rtl/spi8370.v" "$sw/tests/tb_spi8370.sv"
 vvp "$tmp/tb_spi8370.vvp"
 dfe_files=(common/simple_ram.v common/dsp_nco_rom.v common/dsp_nco.v \
-    common/dsp_mul2.v common/dsp_cic_dec.v common/dsp_fir_dec_sym.v \
+    common/dsp_mul2.v common/dsp_cic_dec.v common/dsp_cic_dec_pipe.v common/dsp_fir_dec_sym.v \
     common/sys_sw_dfe_1mhz.v common/sys_sw_dfe_1mhz_nco14.v)
 iverilog -g2012 -s tb_dfe_tone -o "$tmp/tb_dfe_tone.vvp" \
     "${dfe_files[@]}" "$sw/tests/tb_dfe_tone.sv"

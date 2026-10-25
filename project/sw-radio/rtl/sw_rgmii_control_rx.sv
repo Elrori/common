@@ -1,6 +1,6 @@
 // PHY0 RGMII input timing copied from the K9+ board's verified IDELAY12/IDDR
 // interface. Command parser accepts UDP/IPv4 destination port 50001 only.
-// "K9TU" + uint32LE Hz + uint32LE FCW (40 MHz); "K9AG" + uint8 gain.
+// "K9TU" + uint32LE Hz + uint32LE FCW (62.5 MHz); "K9AG" + uint8 gain.
 module sw_rgmii_control_rx (
     input wire phy_clk, input wire idelay_refclk,
     input wire idelay_rst, input wire rst,

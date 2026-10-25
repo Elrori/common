@@ -29,6 +29,7 @@ read_verilog -sv [list \
     [file join $repo common dsp_nco.v] \
     [file join $repo common dsp_mul2.v] \
     [file join $repo common dsp_cic_dec.v] \
+    [file join $repo common dsp_cic_dec_pipe.v] \
     [file join $repo common dsp_fir_dec_sym.v] \
     [file join $repo common sys_sw_dfe_1mhz.v] \
     [file join $repo common sys_sw_dfe_1mhz_nco14.v] \
@@ -65,6 +66,6 @@ if {[llength $failing_paths] != 0} {
         [get_property SLACK $worst_path]]
 }
 write_checkpoint -force [file join $out routed.dcp]
-write_bitstream -force [file join $out sw_radio_k9plus_ext.bit]
+write_bitstream -force [file join $out sw_radio_62m5_k9plus_ext.bit]
 puts "SW_RADIO_BUILD_PASS"
 exit

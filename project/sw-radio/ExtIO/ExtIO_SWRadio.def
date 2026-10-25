@@ -1,5 +1,5 @@
 ; Explicit undecorated names for 32-bit HDSDR GetProcAddress.
-LIBRARY ExtIO_SWRadio
+LIBRARY ExtIO_SWRadio_62M5
 EXPORTS
     InitHW=_InitHW@12
     OpenHW=_OpenHW@0

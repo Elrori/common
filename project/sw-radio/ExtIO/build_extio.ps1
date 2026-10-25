@@ -12,4 +12,4 @@ $arguments = @(
 )
 & $msbuild @arguments
 if ($LASTEXITCODE -ne 0) { throw "MSBuild failed ($LASTEXITCODE)" }
-Write-Host 'Copy the Win32 Release ExtIO_SWRadio.dll into the HDSDR directory.'
+Write-Host 'Copy the Win32 Release ExtIO_SWRadio_62M5.dll into the HDSDR directory.'

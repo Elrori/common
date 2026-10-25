@@ -7,6 +7,9 @@ work
 *.swp
 a.out
 .Xil/
+xsim.dir/
+xvlog.pb
+xelab.pb
 project/sw-radio/build/
 project/sw-radio/ExtIO/ExtIO_SWRadio/
 project/sw-radio/ExtIO/Release/

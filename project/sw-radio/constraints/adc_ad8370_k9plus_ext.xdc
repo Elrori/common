@@ -15,7 +15,7 @@ set_property PACKAGE_PIN N4 [get_ports {adc_data[11]}]
 set_property PACKAGE_PIN K1 [get_ports adc_otr]
 set_property IOSTANDARD LVCMOS33 [get_ports {adc_data[*] adc_otr}]
 
-# FPGA-forwarded 40 MHz conversion clock.
+# FPGA-forwarded 62.5 MHz conversion clock.
 set_property PACKAGE_PIN K4 [get_ports adc_clk_out]
 set_property IOSTANDARD LVCMOS33 [get_ports adc_clk_out]
 set_property DRIVE 8 [get_ports adc_clk_out]
@@ -32,10 +32,10 @@ set_property SLEW SLOW [get_ports {ad8370_sclk ad8370_mosi ad8370_latch}]
 # The ADC launches data from the forwarded clock and the FPGA captures the
 # preceding sample immediately before the converter updates it.  The AD9226
 # data-sheet specifies 3.5 ns minimum and 7.0 ns maximum clock-to-data delay
-# at 65 MSPS; using those limits is conservative at the board's 40 MHz rate.
+# at 65 MSPS; this 62.5 MHz build therefore uses the worst-case values.
 # Post-route hold/setup reports remain mandatory before programming.
 create_generated_clock -name adc_forwarded_clk \
-    -source [get_ports clk_25m] -multiply_by 8 -divide_by 5 \
+    -source [get_ports clk_25m] -multiply_by 5 -divide_by 2 \
     [get_ports adc_clk_out]
 set_input_delay -clock adc_forwarded_clk -min 3.5 \
     [get_ports {adc_data[*] adc_otr}]

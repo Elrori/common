@@ -18,7 +18,7 @@ module sw_radio_top (
     output wire        eth_rst_n
 );
     wire adc_clk, ref_clk, clocks_locked;
-    sw_clock_gen clocks(.clk25(clk_25m),.clk40(adc_clk),
+    sw_clock_gen clocks(.clk25(clk_25m),.clk_adc(adc_clk),
         .clk200(ref_clk),.locked(clocks_locked));
     wire adc_rst=~clocks_locked;
     // This K9+ mezzanine has been verified with the forwarded clock in phase
@@ -32,7 +32,7 @@ module sw_radio_top (
     // 12-bit bus fed directly to signed DSP.  Its format strap is therefore
     // two's complement; flipping bit 11 here would create a half-scale
     // discontinuity at every zero crossing and destroy weak RF signals.
-    // Keep the first capture register in the I/O cells.  At 40 MSPS this also
+    // Keep the first capture register in the I/O cells.  At 62.5 MSPS this
     // isolates the external bus from the DFE's wider routing fanout.
     (* IOB="TRUE" *) reg [11:0] adc_data_iob;
     (* IOB="TRUE" *) reg adc_otr_iob;
@@ -93,7 +93,7 @@ module sw_radio_top (
 
     wire [31:0] i_fir,q_fir;
     wire i_valid,q_valid;
-    sys_sw_dfe_1mhz_nco14 dfe (
+    sys_sw_dfe_1mhz_nco14_62m5 dfe (
         .clk_adc(adc_clk),.rst_n(clocks_locked),
         .adc_dat(adc_signed),.phi_inc(fcw_adc),
         .sin_fir(i_fir),.cos_fir(q_fir),
@@ -103,10 +103,10 @@ module sw_radio_top (
     wire [31:0] iq_word, dropped_samples;
     wire [11:0] fifo_words;
     wire fifo_empty, fifo_pop;
-    // Correct two's-complement ADC data is about 30 dB below the previously
-    // mis-decoded stream. SHIFT=5 uses the 16-bit transport range while the
-    // measured 0x40 gain setting retains ample peak headroom.
-    sw_iq_cdc #(.SHIFT(5)) iq_cdc (
+    // CIC25's non-power-of-two gain leaves the FIR output 4.7 dB below the
+    // CIC16 build. SHIFT=4 restores comparable HDSDR display level (about
+    // +1.3 dB versus the 40 MSPS build) while retaining measured headroom.
+    sw_iq_cdc #(.SHIFT(4)) iq_cdc (
         .wr_clk(adc_clk),.wr_rst(adc_rst),
         .sample_valid(i_valid && q_valid),
         .i_fir(i_fir),.q_fir(q_fir),

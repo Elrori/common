@@ -10,7 +10,7 @@ $bitPath = if ($Bit) {
     if ([IO.Path]::IsPathRooted($Bit)) { [IO.Path]::GetFullPath($Bit) }
     else { [IO.Path]::GetFullPath((Join-Path $root $Bit)) }
 } else {
-    Join-Path $root 'build\sw_radio_k9plus_ext.bit'
+    Join-Path $root 'build\sw_radio_62m5_k9plus_ext.bit'
 }
 if (-not (Test-Path -LiteralPath $bitPath)) {
     throw "Build the bitstream first: $bitPath"

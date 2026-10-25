@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
-// End-to-end fixed-point DFE smoke test: 40 MSPS input, 5 MHz test tone,
-// 5 MHz 32-bit FCW; ensure I/Q strobes align and 1.25 MSPS output cadence.
+// End-to-end fixed-point DFE smoke test: 62.5 MSPS input, 7.8125 MHz tone,
+// matching 32-bit FCW; ensure I/Q strobes align and 1.25 MSPS cadence.
 module tb_dfe_tone;
-    reg clk=0; always #12.5 clk=~clk;
+    reg clk=0; always #8 clk=~clk;
     reg rst_n=0;
     reg [11:0] adc_dat=0;
     wire [31:0] i_out, q_out;
@@ -10,7 +10,7 @@ module tb_dfe_tone;
     integer tick=0, count=0, unexpected=0;
     longint signed i_total=0, q_total=0;
     reg signed [11:0] sample;
-    sys_sw_dfe_1mhz_nco14 dut (
+    sys_sw_dfe_1mhz_nco14_62m5 dut (
         .clk_adc(clk),.rst_n(rst_n),.adc_dat(adc_dat),
         .phi_inc(32'h20000000),
         .sin_fir(i_out),.cos_fir(q_out),
@@ -46,7 +46,7 @@ module tb_dfe_tone;
         @(negedge clk);rst_n=1;
         repeat(32000) @(posedge clk);
         if (unexpected!=0) $fatal(1,"I/Q not aligned: %0d",unexpected);
-        if (count<850 || count>1010) $fatal(1,"output rate invalid: %0d",count);
+        if (count<500 || count>620) $fatal(1,"output rate invalid: %0d",count);
         if (i_total==0 || q_total==0) $display("NOTE one I/Q mean is near zero (expected for DC tone)");
         if ((i_total<1000000 && i_total>-1000000) &&
             (q_total<1000000 && q_total>-1000000))

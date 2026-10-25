@@ -22,7 +22,7 @@ namespace {
 constexpr int kPortRx = 50003, kPortControl = 50001;
 constexpr int kSamplesPacket = 256, kCallbackSamples = 512;
 constexpr long kSampleRate = 1250000;
-constexpr double kAdcHz = 40000000.0;
+constexpr double kAdcHz = 62500000.0;
 constexpr wchar_t kGainWindowClass[] = L"SWRadioAD8370GainWindow";
 constexpr UINT kMsgOtrChanged = WM_APP + 1;
 constexpr int kSliderId = 1001, kLowId = 1002, kDefaultId = 1003, kHighId = 1004;
@@ -241,8 +241,8 @@ void close_network() {
 extern "C" {
 __declspec(dllexport) bool __stdcall InitHW(char* name,char* model,int& type) {
     // ExtIO host provides 16-byte arrays (incl terminator).
-    strncpy_s(name,16,"SW-Radio",_TRUNCATE);
-    strncpy_s(model,16,"K9+ AD9226",_TRUNCATE);
+    strncpy_s(name,16,"SW-Radio 62M5",_TRUNCATE);
+    strncpy_s(model,16,"K9+ AD9226-62",_TRUNCATE);
     type=3; // exthwUSBdata16
     return true;
 }

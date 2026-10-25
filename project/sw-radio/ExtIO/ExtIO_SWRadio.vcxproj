@@ -13,6 +13,7 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets"><Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" /></ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"><TargetName>ExtIO_SWRadio_62M5</TargetName></PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile><WarningLevel>Level4</WarningLevel><SDLCheck>true</SDLCheck><LanguageStandard>stdcpp17</LanguageStandard><PreprocessorDefinitions>WIN32;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions></ClCompile>
     <Link><ModuleDefinitionFile>ExtIO_SWRadio.def</ModuleDefinitionFile><AdditionalDependencies>Ws2_32.lib;Comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies></Link>

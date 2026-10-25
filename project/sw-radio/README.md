@@ -1,4 +1,4 @@
-# SW-Radio | K9+ FPGA / 40 MSPS ADC / Gigabit Ethernet / HDSDR
+# SW-Radio | K9+ FPGA / 62.5 MSPS AD9226 / Gigabit Ethernet / HDSDR
 
 The `k9plus_ext` ADC/AD8370 mezzanine pin map is in
 `constraints/adc_ad8370_k9plus_ext.xdc`. It was supplied for the connected
@@ -7,37 +7,62 @@ Xilinx Platform Cable USB and PHY0 Ethernet. The obsolete deliberately unsafe
 placeholder file remains only as branch history and is not read by the build.
 
 This is a self-contained Vivado *source/project template* in the branch
-`feature/dfe-nco14-mixer18-adc12`. It reuses the present `common/` DSP RTL;
+`feature/dfe-62m5-ad9226`, created from the proven
+`feature/dfe-nco14-mixer18-adc12` 40 MSPS branch. It retains that branch's
+NCO14/MIX18/CIC20/FIR47 optimizations while changing the ADC rate and CIC
+decimation. It reuses the present `common/` DSP RTL;
 only its Ethernet MAC RTL is vendored. Physical target:
 `xc7a50t-fgg484-1` (Colorlight K9+ / XI050CD hardware as referenced in
 `Elrori/k9plus-fm-radio`). AD8370 control RTL comes from the supplied
 `spi8370` attachment. The Ethernet PHY0 RX IDELAY12 / TX ODDR configuration
 and pins are drawn from the board-proven FM-radio hardware design.
 
-## Current handoff status (2026-10-24)
+## Current handoff status (2026-10-25)
 
 This section is the starting point for the next engineer or AI. Do not infer
-that "no audible station" means the FPGA stream is dead, and do not discard
-the present uncommitted work. The complete ADC -> DFE -> Ethernet -> ExtIO
+that "no audible station" means the FPGA stream is dead. The complete
+ADC -> DFE -> Ethernet -> ExtIO
 path is operating. The open problem is **live short-wave sensitivity / noise
 and blocking**, most likely in the antenna and analog/EMI environment rather
 than in the frequency-control or I/Q RTL.
 
+### Why this branch uses 62.5 MSPS
+
+The AD9226 is rated to 65 MSPS, but 62.5 MHz is an exact, low-risk division
+of the existing 1 GHz MMCM VCO (`/16`) while the IDELAY reference remains an
+exact 200 MHz (`/5`). Nyquist is therefore 31.25 MHz, above the board's
+nominal 30 MHz input LPF. At 40 MSPS, for example, an input at 24.770 MHz
+aliases directly to 15.230 MHz. Merely raising the sample rate gives only
+about 1.94 dB of ideal white-noise processing gain; removing this 20--30 MHz
+folding is the more important benefit.
+
+The output rate remains exactly 1.25 MSPS by changing only the first
+decimator: `62.5 / 25 / 2`. The original NCO14, signed MIX18, CIC20 output and
+47-tap FIR are retained. The CIC now has 47-bit full-precision storage and a
+register between every integrator/comb stage so the 16 ns clock closes timing.
+The committed CIC25/FIR47 coefficients give about 0.0226 dB peak-to-peak
+ripple from DC to 500 kHz and -96.8 dB worst stopband response from 750 kHz
+to 1.25 MHz. The 40 MSPS reference is 0.0176 dB / -96.8 dB, so practical
+filter performance is unchanged.
+
 ### Last known live state
 
-- The final bitstream is `build/sw_radio_k9plus_ext.bit`, SHA-256
+- The 62.5 MSPS bitstream is `build/sw_radio_62m5_k9plus_ext.bit`, SHA-256
+  `AB774719E41C2FDFF83FBCFBE56EF6F18899D727602E6A8D7DC7A97BA1000FA3`. The proven
+  40 MSPS rollback image remains `build/sw_radio_k9plus_ext.bit`, SHA-256
   `D7E1FA2DDD4110424D72A948CF8ADCA937D364332168636D5EB81FEB9185D561`.
 - It was loaded by volatile JTAG after the most recent power interruption;
   Vivado reported startup `HIGH` on `xc7a50t_0`.
 - The FPGA was finally left tuned to **15,230,000 Hz** with AD8370 code
-  **`0xA0`**. A 512-packet check then had zero sequence discontinuities,
+  **`0xA0`**. A 1,024-packet check then had zero sequence discontinuities,
   zero FPGA sample drops and `adc_overrange=false`. A power cycle loses the
   bitstream and requires `./program.ps1` again.
 - HDSDR was deliberately stopped while command-line capture owned UDP/50003.
   Reopen it manually when needed. The user explicitly asked the agent not to
   use computer-use/UI automation; use scripts and let the user operate HDSDR.
 - Windows HDSDR 2.81a is in `C:\Program Files (x86)\HDSDR`. Installed
-  receivers are `ExtIO_SWRadio.dll`, `ExtIO_RTL.dll` and
+  receivers include `ExtIO_SWRadio_62M5.dll`, the rollback
+  `ExtIO_SWRadio.dll`, `ExtIO_RTL.dll` and
   `ExtIO_SDRplay_RSP1.dll`. SDRplay API 3.15 and its service are installed;
   a connected RSP1 was successfully opened by HDSDR at 2 MSPS.
 
@@ -63,6 +88,17 @@ than in the frequency-control or I/Q RTL.
 4. Gain `0xC0` is marginal and has asserted OTR in one live run; `0xE0`
    asserted it. The final `0xA0` run was clean. OTR is sticky until FPGA reset
    or reprogramming, so a later lower gain does not clear an earlier event.
+5. A same-board, same-antenna, same-time A/B at 15.230 MHz and gain `0xA0`
+   measured a 40 MSPS spectral-bin median of about -86.8 dBFS/Hz and a
+   62.5 MSPS median of about -98.6 dBFS/Hz before the final 6 dB display-scale
+   compensation. After accounting for the CIC16/CIC25 binary scaling, this is
+   about a 7 dB real noise/SNR improvement in the present RF environment.
+   Retuned external carriers retained their expected amplitude and moved by
+   exactly minus the tune delta. This supports the diagnosis that the 30 MHz
+   input LPF allowed 20--30 MHz energy to alias into 10--20 MHz at 40 MSPS.
+   With the final matched display scaling, the observed 62.5 MSPS floor was
+   about -92.6 dBFS/Hz versus -86.8 dBFS/Hz at 40 MSPS, while the external
+   carrier near +34.3 kHz was about -76.8 versus -77.0 dBFS/Hz.
 
 Useful evidence remains in `build/` and is intentionally not source control:
 
@@ -81,11 +117,12 @@ Chebyshev input LPF, but it is not electrically identical to the complete
 Kiwi receiver:
 
 - this board uses an AD8370 variable-gain IF amplifier and a 12-bit AD9226 at
-  40 MSPS; KiwiSDR uses a fixed +20 dB LTC6401-20 ADC driver and a 14-bit
+  62.5 MSPS (the rollback build used 40 MSPS); KiwiSDR uses a fixed +20 dB
+  LTC6401-20 ADC driver and a 14-bit
   LTC2248 at 65 MSPS;
 - Kiwi documents another roughly 40 MHz LC filter after its preamplifier,
   quiet LDO supplies, a local low-jitter ADC oscillator and RF shielding;
-- this setup forwards 40 MHz from the FPGA across the mezzanine and operates
+- this setup forwards 62.5 MHz from the FPGA across the mezzanine and operates
   beside FPGA/RGMII digital activity. Its 5 V supply, ground return, clock
   coupling, shielding and output matching have not yet been measured;
 - neither receiver supplies a good antenna by itself. It is not yet confirmed
@@ -120,7 +157,7 @@ and is not the authoritative ADC data-format reference.
    -110 to -60 dBm. Tune the DFE to 15.130 MHz so the signal is at +100 kHz,
    away from DC. This measures an actual demodulation threshold and separates
    analog sensitivity from propagation and antenna uncertainty.
-4. Measure ADC-board 5 V/3.3 V noise, the 40 MHz clock at the ADC and analog
+4. Measure ADC-board 5 V/3.3 V noise, the 62.5 MHz clock at the ADC and analog
    common-mode levels. Try a clean supply, shorter ground/clock connection and
    temporary RF shielding before changing DFE RTL.
 5. If strong broadcast/MW energy causes OTR, add an MW reject/high-pass or a
@@ -152,23 +189,24 @@ The reusable tools in `scripts/` avoid repeating ad-hoc notebook commands:
 ## Data path
 
 ```text
-25 MHz oscillator -> MMCM: 40 MHz ADC/sample clock + 200 MHz IDELAY reference
-40 MHz AD9226 12-bit two's-complement parallel data
+25 MHz oscillator -> MMCM: 62.5 MHz ADC/sample clock + 200 MHz IDELAY reference
+62.5 MHz AD9226 12-bit two's-complement parallel data
        -> IOB capture of the raw signed bus (no MSB inversion)
        -> NCO14 / signed 18-bit mixer (32-bit frequency word)
-       -> 5-stage CIC, R=16, M=2, CIC output 20 bits
+       -> 5-stage fully pipelined CIC, R=25, M=2, full precision 47 bits
+          and rounded 20-bit output
        -> 47-tap symmetric/compensated FIR, R=2, 32-bit result
-       -> signed 16-bit saturating quantizer (right shift 5)
+       -> signed 16-bit saturating quantizer (right shift 4)
        -> 2,048 x 32-bit asynchronous FIFO (atomic I/Q)
        -> K9IQ version-3 UDP/IP Ethernet II frame
        -> verilog-ethernet MAC (CRC/preamble/IFG) -> RGMII PHY0
-       -> host UDP port 50003 -> ExtIO_SWRadio.dll -> HDSDR
+       -> host UDP port 50003 -> ExtIO_SWRadio_62M5.dll -> HDSDR
 
 Ethernet control UDP port 50001 -> RGMII parser -> acknowledged CDC
     -> NCO FCW and user-supplied spi8370 module -> AD8370 gain
 ```
 
-40 MSPS / 16 / 2 = **1.25 MSPS complex I/Q**; monitor the central
+62.5 MSPS / 25 / 2 = **1.25 MSPS complex I/Q**; monitor the central
 **1 MHz (±500 kHz)** while using the ±500..625 kHz margins as FIR guard bands.
 The Ethernet IQ16 payload is **5.00 MB/s, 40.0 Mbit/s before framing**. It
 is not raw ADC12 samples. Because the source ADC remains 12-bit, 16-bit
@@ -193,11 +231,14 @@ On Linux, `bash project/sw-radio/build.sh --synth-only` or
 Build artifacts go to `project/sw-radio/build/`:
 
 - `post_synth.dcp`, `routed.dcp`, utilization, timing and DRC reports;
-- `sw_radio_k9plus_ext.bit` after a full successful build.
+- `sw_radio_62m5_k9plus_ext.bit` after a full successful build. The old
+  `sw_radio_k9plus_ext.bit` is a rollback artifact and is not overwritten.
 
 Vivado 2019.1 synthesis, placement, routing, bitstream generation, volatile
 JTAG programming, live UDP streaming and the HDSDR ExtIO callback path have
-all been exercised on the target hardware. Continue to use the post-route
+all been exercised on the target hardware. The final 62.5 MHz route has
+WNS +2.412 ns, WHS +0.025 ns, ADC input setup +3.621 ns and hold +4.939 ns;
+there are zero unrouted nets and no DRC errors. Continue to use the post-route
 timing/DRC reports and verify the connected module voltage before applying a
 bitstream to another board revision.
 
@@ -208,15 +249,16 @@ bitstream to another board revision.
 | K9+ 25 MHz W19 | Reference board verified | `constraints/k9plus_phy0.xdc` |
 | PHY0 RGMII W4/V4, AA1..AB5 | Reference board verified | `constraints/k9plus_phy0.xdc` |
 | 12 parallel ADC data pins + OTR | Connected and live-tested | `constraints/adc_ad8370_k9plus_ext.xdc` |
-| FPGA → ADC 40 MHz clock | Connected; IOB capture and post-route timing pass | same |
+| FPGA → ADC 62.5 MHz clock | Connected; IOB capture, live IQ and post-route timing pass | same |
 | AD8370 SDA/SCK/CS | Connected; live gain response and OTR boundary tested | same |
 
 The fitted converter is the user's **AD9226** module.  Comparison against its
 previously working EBAZ4205 design and live A/B captures confirms that the
 module is strapped for **two's complement**, so the raw 12-bit bus goes into
 the signed mixer without flipping bit 11.  The K9+ mezzanine was verified with
-an in-phase 40 MHz forwarded clock; changing its polarity stopped the IQ
-stream on this physical module.  AD9226 clock-to-data limits (3.5..7.0 ns) are
+an in-phase forwarded clock at both 40 and 62.5 MHz; changing its polarity
+stopped the IQ stream on this physical module. AD9226 clock-to-data limits
+(3.5..7.0 ns) are
 constrained in `constraints/adc_ad8370_k9plus_ext.xdc`, and post-route setup
 and hold must pass before a bitstream is emitted.  OTR is connected and carried
 as a sticky UDP status bit.  There is no ADC RF anti-alias or input protection
@@ -252,7 +294,7 @@ UDP payload length 1056 bytes (32+1024); UDP header `length=1064`
 (excluding preamble/FCS). Frequency control payloads sent as UDP/50001:
 
 ```text
-Tune: 'K9TU' + uint32LE frequency_hz + uint32LE (round(frequency_hz*2^32/40e6) mod 2^32)
+Tune: 'K9TU' + uint32LE frequency_hz + uint32LE (round(frequency_hz*2^32/62.5e6) mod 2^32)
 Gain: 'K9AG' + uint8 AD8370 raw gain code, 0..255
 ```
 
@@ -275,16 +317,18 @@ python3 project/sw-radio/host/sw_radio.py receive --packets 100 --output monitor
 For HDSDR (32-bit Windows), open `ExtIO/ExtIO_SWRadio.vcxproj` in Visual Studio
 2022 with the x86 C++ desktop workload and build **Release|Win32**, or run
 `ExtIO/build_extio.ps1` in a Developer PowerShell. Copy the resulting
-`ExtIO_SWRadio.dll` into HDSDR's application directory. Type 3 means signed
+`ExtIO_SWRadio_62M5.dll` into HDSDR's application directory. Keep
+`ExtIO_SWRadio.dll` only for the 40 MSPS rollback bitstream. Type 3 means signed
 interleaved 16-bit IQ, the DLL feeds 512 complex samples per callback from
 two UDP frames; `GetHWSR()` returns 1,250,000. Set
 `SW_RADIO_CONTROL_HOST` (e.g. `192.168.10.255`) if a different control target
 is needed. On Linux with MinGW-W64, the optional `ExtIO/build_mingw.sh`
 produces an x86 DLL with undecorated ExtIO exports and static C++ runtime.
-The Windows x86 DLL has been compiled with MSVC, its undecorated exports have
-been inspected, and HDSDR 2.81a has loaded it as a 16-bit/1.25-MSPS ExtIO.
-A two-second ABI smoke test delivered 4,890 callbacks and 2,503,680 complex
-samples from the live FPGA. Click HDSDR's **SDR-Device** button to open the
+The Windows x86 DLL has been compiled with MSVC with zero warnings/errors and
+installed as `C:\Program Files (x86)\HDSDR\ExtIO_SWRadio_62M5.dll` (SHA-256
+`522C6D715E6C5145088DA33E316FDD515410B9DC35DC3F252CB432C429A425F5`).
+A final two-second ABI smoke test delivered 4,894 callbacks and 2,505,728
+complex samples from the live FPGA. Click HDSDR's **SDR-Device** button to open the
 built-in AD8370 gain panel. Its 0..255 slider and Low/Default/High presets send
 `K9AG` immediately; the panel also displays the packetized sticky ADC OTR flag.
 AD8370 codes are not monotonic across the entire unsigned 0..255 range: bit 7
@@ -308,9 +352,11 @@ Python 3.10+ installed. It executes:
 3. Supplied AD8370 SPI sequencer: 8-bit MSB-first transmission, completion,
    serial clock and latch behavior.
 4. NCO14 quadrature (two ROMs, 5 MHz 32-bit FCW, dither on).
-5. 40 MSPS end-to-end DFE 5 MHz tone, aligned I/Q strobes and ~1.25 MSPS.
+5. 62.5 MSPS end-to-end DFE 7.8125 MHz tone, aligned I/Q strobes and exactly
+   1.25 MSPS after CIC25/FIR2.
 6. Top-level RTL elaboration, using black boxes for Xilinx-specific primitives.
-7. Python protocol unit tests for tune FCW, gain range, signed IQ16 and v3.
+7. Python protocol unit tests for the 62.5 MHz tune FCW, gain range, signed
+   IQ16 and v3, plus analytic CIC25/FIR47 passband/stopband checks.
 
 The source-level simulations are complemented by a Vivado 2019.1 post-route
 build and target-board checks. On the tested board, routing completed with no
@@ -330,5 +376,6 @@ the exact ADC module fitted to the board.
 - FPGA MAC and PHY0 wiring follow
   [Elrori/k9plus-fm-radio](https://github.com/Elrori/k9plus-fm-radio),
   **only for hardware/Ethernet interfaces**, not its FM RF processing.
-- DSP source in `../../common/` is reused unchanged; NCO14/MIX18/CIC20/FIR47
-  is `sys_sw_dfe_1mhz_nco14` from this branch.
+- The proven NCO14/MIX18/CIC20/FIR47 source is parameterized rather than
+  replaced. The 62.5 MSPS top is `sys_sw_dfe_1mhz_nco14_62m5`; its new
+  timing-friendly CIC registers every integrator and comb stage.

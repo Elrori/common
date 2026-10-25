@@ -24,7 +24,7 @@ from pathlib import Path
 import numpy as np
 
 FS = 1_250_000
-ADC_RATE = 40_000_000
+ADC_RATE = 62_500_000
 IQ_PER_PACKET = 256
 K9IQ_PACKET_SIZE = 32 + IQ_PER_PACKET * 4
 CONTROL_PORT = 50001

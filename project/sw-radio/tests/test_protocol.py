@@ -17,7 +17,7 @@ class TestProtocol(unittest.TestCase):
         self.assertEqual(len(payload), 12)
         hertz, fcw = struct.unpack('<II', payload[4:])
         self.assertEqual(hertz, 7_100_000)
-        self.assertAlmostEqual(fcw / 2**32 * 40_000_000, hertz, delta=.005)
+        self.assertAlmostEqual(fcw / 2**32 * 62_500_000, hertz, delta=.008)
 
     def test_gain_control(self):
         self.assertEqual(mod.gain_bytes(0x80), b'K9AG\x80')
